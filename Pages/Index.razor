@@ -1,0 +1,63 @@
+﻿@page "/"
+@using OnlineRetailersStore.Data
+@inject NavigationManager nav
+
+@code{
+    bool alertVisible = false;
+    string customerId;
+    string username;
+    string password;
+
+    private void Login()
+    {
+        alertVisible = false;
+
+        if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+        {
+            alertVisible = true;
+        }
+        else
+        {
+            customerId = CustomerService.GetCustomerIdByUsernameAndPassword(username, password);
+        }
+
+        if (customerId != null)
+        {
+            nav.NavigateTo($"/home/{customerId}");
+        }
+        else
+        {
+            alertVisible = true;
+        }
+    }
+}
+
+<div class="content-wrap">
+    <div>
+        <h1 class="center-header">Online Retailers Store</h1>
+        <Field Horizontal="true">
+            <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">UserName</FieldLabel>
+            <FieldBody ColumnSize="ColumnSize.Is5">
+                <TextEdit @bind-Text="@username"></TextEdit>
+            </FieldBody>
+        </Field>
+        <Field Horizontal="true">
+            <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">Password</FieldLabel>
+            <FieldBody ColumnSize="ColumnSize.Is5">
+                <TextEdit @bind-Text="@password"></TextEdit>
+            </FieldBody>
+        </Field>
+        <Button class="submit-button" Type="ButtonType.Submit" Color="Color.Dark" Clicked="Login">Login</Button>
+        <Alert Color="Color.Danger" @bind-Visible="@alertVisible">
+            <AlertDescription>
+                The credentials provided are invalid
+            </AlertDescription>
+            <CloseButton />
+        </Alert>
+    </div>
+    <div>
+        <p id="new-account-text">Don't have an account?  Sign up <a href="/create-account">here</a></p>
+    </div>
+
+
+</div>

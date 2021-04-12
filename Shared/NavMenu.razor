@@ -1,0 +1,44 @@
+﻿@code {
+    Sidebar sidebar;
+
+    void ToggleSidebar()
+    {
+        sidebar.Toggle();
+    }
+}
+
+<Sidebar @ref="sidebar">
+    <SidebarContent>
+        <SidebarBrand>
+            <a href="/products">Online Retailers Store</a>
+        </SidebarBrand>
+        <SidebarNavigation>
+            <SidebarItem>
+                <SidebarLink To="/Home" Title="Home">
+                    <Icon Name="IconName.Home" Margin="Margin.Is3.FromRight" />Home
+                </SidebarLink>
+            </SidebarItem>
+            <SidebarItem>
+                <SidebarLink To="/account" Title="Account">
+                    <Icon Name="IconName.Fingerprint" Margin="Margin.Is3.FromRight" />Account
+                </SidebarLink>
+            </SidebarItem>
+            <SidebarItem>
+                <SidebarLink To="/products" Title="Products">
+                    <Icon Name="IconName.Gift" Margin="Margin.Is3.FromRight" />Products
+                </SidebarLink>
+            </SidebarItem>
+            <SidebarItem>
+                <SidebarLink To="/cart" Title="Shopping Cart">
+                    <Icon Name="IconName.ShoppingCart" Margin="Margin.Is3.FromRight" />Shopping Cart
+                </SidebarLink>
+            </SidebarItem>
+            <SidebarItem>
+                <SidebarLink To="/order-history" Title="Order History">
+                    <Icon Name="IconName.History" Margin="Margin.Is3.FromRight" />Order History
+                </SidebarLink>
+            </SidebarItem>
+        </SidebarNavigation>
+    </SidebarContent>
+</Sidebar>
+

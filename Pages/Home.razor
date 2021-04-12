@@ -1,0 +1,55 @@
+﻿@page "/home/{CustomerId}"
+@using OnlineRetailersStore.Data.Models
+@using OnlineRetailersStore.Data
+@inject NavigationManager nav
+
+@code {
+    [Parameter] public string CustomerId { get; set; }
+    string account;
+    string products;
+    string shoppingCart;
+    string orderHistory;
+    Customer customer;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!string.IsNullOrEmpty(CustomerId))
+        {
+            customer = CustomerService.GetCustomerById(CustomerId);
+            account = $"account/{CustomerId}";
+            products = $"products/{CustomerId}";
+            shoppingCart = $"shopping-cart/{CustomerId}";
+            orderHistory = $"order-history/{CustomerId}";
+        }
+        else
+        {
+            nav.NavigateTo("/");
+        }
+    }
+}
+
+<Bar Breakpoint="Breakpoint.Desktop" Background="Background.Light">
+    <BarMenu>
+        <BarStart>
+            <BarItem Style="background-color:darkgrey">
+                <BarLink>Home</BarLink>
+            </BarItem>
+            <BarItem>
+                <BarLink To=@account>Account</BarLink>
+            </BarItem>
+            <BarItem>
+                <BarLink To=@products>Products</BarLink>
+            </BarItem>
+            <BarItem>
+                <BarLink To=@shoppingCart>Shopping Cart</BarLink>
+            </BarItem>
+            <BarItem>
+                <BarLink To=@orderHistory>Order History</BarLink>
+            </BarItem>
+        </BarStart>
+    </BarMenu>
+</Bar>
+<div class="content-wrap">
+    <h2 class="center-header">Online Retailers Store</h2>
+    <h2 class="center-header">Welcome @customer.FirstName</h2>
+</div>
