@@ -25,9 +25,13 @@ a, .btn-link {
     overflow: hidden;
 }
 
-.center-header{
+.sidebar-nav {
+    float:left;
+}
+
+.center-header {
     text-align: center;
-    margin-bottom:50px;
+    margin-bottom: 50px;
 }
 
 .sub-header {
