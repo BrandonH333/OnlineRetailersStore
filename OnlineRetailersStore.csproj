@@ -11,4 +11,8 @@
     <PackageReference Include="MySql.Data" Version="8.0.23" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Data\Sql\" />
+  </ItemGroup>
+
 </Project>
