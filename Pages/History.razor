@@ -90,21 +90,21 @@
 <div class="table-section" style="margin-left: 250px; margin-right: 50px; }">
     <table style="width: 100%; margin: auto;">
         <tr>
-            <th>Order Id</th>
-            <th>Product Id</th>
-            <th>Product Name</th>
-            <th> Quantity</th>
-            <th>Total Price</th>
+            <th style="text-align:center">Order Id</th>
+            <th style="text-align:center">Product Id</th>
+            <th style="text-align:center">Product Name</th>
+            <th style="text-align:center">Quantity</th>
+            <th style="text-align:center">Total Price</th>
         </tr>
     
         @foreach(var order in customerOrders)
         {
         <tr>
-            <td>@order.OrderId</td>
-            <td>@order.ProductId</td>
-            <td>@order.Name</td>
-            <td>@order.Quantity</td>
-            <td>@order.Price</td>
+            <td style="text-align:center">@order.OrderId</td>
+            <td style="text-align:center">@order.ProductId</td>
+            <td style="text-align:center">@order.Name</td>
+            <td style="text-align:center">@order.Quantity</td>
+            <td style="text-align:center">$@((order.Price * order.Quantity).ToString())</td>
         </tr>
         }
     </table>
