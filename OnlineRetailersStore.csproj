@@ -8,6 +8,7 @@
     <PackageReference Include="Blazorise.Bootstrap" Version="0.9.3.4" />
     <PackageReference Include="Blazorise.Icons.FontAwesome" Version="0.9.3.4" />
     <PackageReference Include="Blazorise.Sidebar" Version="0.9.3.4" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
     <PackageReference Include="MySql.Data" Version="8.0.23" />
   </ItemGroup>
 
