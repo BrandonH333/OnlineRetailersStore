@@ -118,15 +118,27 @@ else
                             <CardTitle Size="5" Weight="TextWeight.Bold">@productList.list[localSize].Name</CardTitle>
                             @if (Int32.Parse(productList.list[localSize].amount) > 0)
                             {
-                                <CardText Style="color: green">In stock </CardText>
-                                <CardText> Quantity: @productList.list[localSize].amount</CardText>
-                            }
+                                <Row Gutter="(32,16)">
+                                    <Column ColumnSize="ColumnSize.Is6">
+                                        <CardText Style="color: green"> In stock </CardText>
+                                    </Column>
+                                    <Column ColumnSize="ColumnSize.Is6">
+                                        <CardText Style="font-size:16px"> Quantity: @productList.list[localSize].amount</CardText>
+
+                                    </Column></Row>
+                    
+                }
                             @if (Int32.Parse(productList.list[localSize].amount) <= 0)
                             {
-                                <CardText Style="color: red">Out of stock </CardText>
-                                <CardText> Quantity: @productList.list[localSize].amount</CardText>
+                                <Column ColumnSize="ColumnSize.Is8">
+                                    <CardText Style="color: red">Out of stock </CardText>
+                                </Column><Column ColumnSize="ColumnSize.Is4">
+                                    <CardText> Quantity: @productList.list[localSize].amount</CardText>
+                                </Column>
+
+
                             }
-                            <CardText Class="card-text">
+                            <CardText Style="font-size:small">
                                 @productList.list[localSize].Description
                             </CardText>
 
@@ -137,11 +149,11 @@ else
 
 
 
-                        </CardBody>
-                    </Card>
-                </Column>
+                            </CardBody>
+                            </Card>
+                            </Column>
 
-            }
+                        }
 
         </Row>
         

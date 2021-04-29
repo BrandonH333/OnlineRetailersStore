@@ -14,6 +14,10 @@ a, .btn-link {
     border-color: #1861ac;
 }
 
+
+.card-text{
+    font: 16px;
+}
 .content {
     padding-top: 1.1rem;
 }
