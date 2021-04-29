@@ -1,34 +1,39 @@
 ﻿@page "/create-account"
-@page "/account/{CustomerId}"
+@page "/account/{UserId}"
 @using OnlineRetailersStore.Data.Models
 @using OnlineRetailersStore.Data
 @inject NavigationManager nav
 
 @code {
-    [Parameter] public string CustomerId { get; set; }
-    CustomerInformation customerInfo;
+    [Parameter] public string UserId { get; set; }
+    UserInformation userInfo;
     Sidebar sidebar;
     bool alertVisible = false;
     string home;
     string products;
     string shoppingCart;
     string orderHistory;
-    
+    string productManagement;
+    string signOut;
+
     protected override async Task OnInitializedAsync()
     {
-        if (!string.IsNullOrEmpty(CustomerId))
+        if (!string.IsNullOrEmpty(UserId))
         {
-            // Query for customer info so we can set the object and pass into data bindings into the blazorise front end component library below
-            customerInfo = CustomerService.GetCustomerInformationById(CustomerId);
-            home = $"home/{CustomerId}";
-            products = $"products/{CustomerId}";
-            shoppingCart = $"shopping-cart/{CustomerId}";
-            orderHistory = $"order-history/{CustomerId}";
+            // Query for user info so we can set the object and pass into data bindings into the blazorise front end component library below
+            userInfo = UserService.GetUserInformationById(UserId);
+            home = $"home/{UserId}";
+            products = $"products/{UserId}";
+            shoppingCart = $"shopping-cart/{UserId}";
+            orderHistory = $"order-history/{UserId}";
+            productManagement = $"product-management/{UserId}";
+            signOut = $"/";
         }
         else
         {
-            customerInfo = new CustomerInformation();
-            customerInfo.BankAccount.ExpirationDate = DateTime.Now;
+            userInfo = new UserInformation();
+            userInfo.BankAccount.ExpirationDate = DateTime.Now;
+            userInfo.User.Retailer = false;
             home = $"/";
             products = $"/";
             shoppingCart = $"/";
@@ -38,8 +43,8 @@
 
     private void Save()
     {
-        alertVisible = CustomerService.SaveCustomer(customerInfo);
-        nav.NavigateTo("account/" + customerInfo.Customer.Id);
+        alertVisible = UserService.SaveUser(userInfo);
+        nav.NavigateTo("account/" + userInfo.User.Id);
     }
 }
 
@@ -60,19 +65,35 @@
                         <Icon Name="IconName.Fingerprint" Margin="Margin.Is3.FromRight" />Account
                     </SidebarLink>
                 </SidebarItem>
+                @if (!userInfo.User.Retailer)
+                {
+                    <SidebarItem>
+                        <SidebarLink To=@products Title="Products">
+                            <Icon Name="IconName.Gift" Margin="Margin.Is3.FromRight" />Products
+                        </SidebarLink>
+                    </SidebarItem>
+                    <SidebarItem>
+                        <SidebarLink To=@shoppingCart Title="Shopping Cart">
+                            <Icon Name="IconName.ShoppingCart" Margin="Margin.Is3.FromRight" />Shopping Cart
+                        </SidebarLink>
+                    </SidebarItem>
+                    <SidebarItem>
+                        <SidebarLink To=@orderHistory Title="Order History">
+                            <Icon Name="IconName.History" Margin="Margin.Is3.FromRight" />Order History
+                        </SidebarLink>
+                    </SidebarItem>
+                }
+                else
+                {
+                    <SidebarItem>
+                        <SidebarLink To=@productManagement Title="Manage Products">
+                            <Icon Name="IconName.CheckSquare" Margin="Margin.Is3.FromRight" />Manage Products
+                        </SidebarLink>
+                    </SidebarItem>
+                }
                 <SidebarItem>
-                    <SidebarLink To=@products Title="Products">
-                        <Icon Name="IconName.Gift" Margin="Margin.Is3.FromRight" />Products
-                    </SidebarLink>
-                </SidebarItem>
-                <SidebarItem>
-                    <SidebarLink To=@shoppingCart Title="Shopping Cart">
-                        <Icon Name="IconName.ShoppingCart" Margin="Margin.Is3.FromRight" />Shopping Cart
-                    </SidebarLink>
-                </SidebarItem>
-                <SidebarItem>
-                    <SidebarLink To=@orderHistory Title="Order History">
-                        <Icon Name="IconName.History" Margin="Margin.Is3.FromRight" />Order History
+                    <SidebarLink To=@signOut Title="Sign out">
+                        <Icon Name="IconName.User" Margin="Margin.Is3.FromRight" />Sign out
                     </SidebarLink>
                 </SidebarItem>
             </SidebarNavigation>
@@ -82,7 +103,7 @@
 
 <div class="content-wrap">
 
-    @if (!string.IsNullOrEmpty(CustomerId))
+    @if (!string.IsNullOrEmpty(UserId))
     {
         <h2 class="center-header">Edit Account Details</h2>
     }
@@ -91,96 +112,99 @@
         <h2 class="center-header">Create Account</h2>
     }
 
-    <EditForm Model="@customerInfo" OnValidSubmit="Save" Context="OrderService">
+    <EditForm Model="@userInfo" OnValidSubmit="Save" Context="OrderService">
         <Field Horizontal="true">
             <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">First Name</FieldLabel>
             <FieldBody ColumnSize="ColumnSize.Is5">
-                <TextEdit @bind-Text="@customerInfo.Customer.FirstName"></TextEdit>
+                <TextEdit @bind-Text="@userInfo.User.FirstName"></TextEdit>
             </FieldBody>
         </Field>
         <Field Horizontal="true">
             <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">Last Name</FieldLabel>
             <FieldBody ColumnSize="ColumnSize.Is5">
-                <TextEdit @bind-Text="@customerInfo.Customer.LastName"></TextEdit>
+                <TextEdit @bind-Text="@userInfo.User.LastName"></TextEdit>
             </FieldBody>
         </Field>
         <Field Horizontal="true">
             <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">Username</FieldLabel>
             <FieldBody ColumnSize="ColumnSize.Is5">
-                <TextEdit @bind-Text="@customerInfo.Customer.Username"></TextEdit>
+                <TextEdit @bind-Text="@userInfo.User.Username"></TextEdit>
             </FieldBody>
         </Field>
         <Field Horizontal="true">
             <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">Password</FieldLabel>
             <FieldBody ColumnSize="ColumnSize.Is5">
-                <TextEdit @bind-Text="@customerInfo.Customer.Password"></TextEdit>
+                <TextEdit @bind-Text="@userInfo.User.Password"></TextEdit>
             </FieldBody>
         </Field>
 
-        <h4 class="sub-header">Address</h4>
+        @if (!userInfo.User.Retailer)
+        {
+            <h4 class="sub-header">Address</h4>
 
-        <Field Horizontal="true">
-            <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">Address1</FieldLabel>
-            <FieldBody ColumnSize="ColumnSize.Is5">
-                <TextEdit @bind-Text="@customerInfo.Address.Address1"></TextEdit>
-            </FieldBody>
-        </Field>
-        <Field Horizontal="true">
-            <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">Address2</FieldLabel>
-            <FieldBody ColumnSize="ColumnSize.Is5">
-                <TextEdit @bind-Text="@customerInfo.Address.Address2"></TextEdit>
-            </FieldBody>
-        </Field>
-        <Field Horizontal="true">
-            <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">City</FieldLabel>
-            <FieldBody ColumnSize="ColumnSize.Is5">
-                <TextEdit @bind-Text="@customerInfo.Address.City"></TextEdit>
-            </FieldBody>
-        </Field>
-        <Field Horizontal="true">
-            <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">State</FieldLabel>
-            <FieldBody ColumnSize="ColumnSize.Is5">
-                <TextEdit @bind-Text="@customerInfo.Address.State"></TextEdit>
-            </FieldBody>
-        </Field>
-        <Field Horizontal="true">
-            <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">Zip Code</FieldLabel>
-            <FieldBody ColumnSize="ColumnSize.Is5">
-                <NumericEdit @bind-Value="@customerInfo.Address.ZipCode"></NumericEdit>
-            </FieldBody>
-        </Field>
-        <Field Horizontal="true">
-            <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">Country</FieldLabel>
-            <FieldBody ColumnSize="ColumnSize.Is5">
-                <TextEdit @bind-Text="@customerInfo.Address.Country"></TextEdit>
-            </FieldBody>
-        </Field>
+            <Field Horizontal="true">
+                <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">Address1</FieldLabel>
+                <FieldBody ColumnSize="ColumnSize.Is5">
+                    <TextEdit @bind-Text="@userInfo.Address.Address1"></TextEdit>
+                </FieldBody>
+            </Field>
+            <Field Horizontal="true">
+                <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">Address2</FieldLabel>
+                <FieldBody ColumnSize="ColumnSize.Is5">
+                    <TextEdit @bind-Text="@userInfo.Address.Address2"></TextEdit>
+                </FieldBody>
+            </Field>
+            <Field Horizontal="true">
+                <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">City</FieldLabel>
+                <FieldBody ColumnSize="ColumnSize.Is5">
+                    <TextEdit @bind-Text="@userInfo.Address.City"></TextEdit>
+                </FieldBody>
+            </Field>
+            <Field Horizontal="true">
+                <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">State</FieldLabel>
+                <FieldBody ColumnSize="ColumnSize.Is5">
+                    <TextEdit @bind-Text="@userInfo.Address.State"></TextEdit>
+                </FieldBody>
+            </Field>
+            <Field Horizontal="true">
+                <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">Zip Code</FieldLabel>
+                <FieldBody ColumnSize="ColumnSize.Is5">
+                    <NumericEdit @bind-Value="@userInfo.Address.ZipCode"></NumericEdit>
+                </FieldBody>
+            </Field>
+            <Field Horizontal="true">
+                <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">Country</FieldLabel>
+                <FieldBody ColumnSize="ColumnSize.Is5">
+                    <TextEdit @bind-Text="@userInfo.Address.Country"></TextEdit>
+                </FieldBody>
+            </Field>
 
-        <h4 class="sub-header">Bank Information</h4>
-        <Field Horizontal="true">
-            <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">Name</FieldLabel>
-            <FieldBody ColumnSize="ColumnSize.Is5">
-                <TextEdit @bind-Text="@customerInfo.BankAccount.Name"></TextEdit>
-            </FieldBody>
-        </Field>
-        <Field Horizontal="true">
-            <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">Card Number</FieldLabel>
-            <FieldBody ColumnSize="ColumnSize.Is5">
-                <TextEdit @bind-Text="@customerInfo.BankAccount.CardNumber"></TextEdit>
-            </FieldBody>
-        </Field>
-        <Field Horizontal="true">
-            <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">Expiration</FieldLabel>
-            <FieldBody ColumnSize="ColumnSize.Is5">
-                <DateEdit @bind-Date="@customerInfo.BankAccount.ExpirationDate"></DateEdit>
-            </FieldBody>
-        </Field>
-        <Field Horizontal="true">
-            <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">CVC</FieldLabel>
-            <FieldBody ColumnSize="ColumnSize.Is5">
-                <NumericEdit @bind-Value="@customerInfo.BankAccount.Cvc"></NumericEdit>
-            </FieldBody>
-        </Field>
+            <h4 class="sub-header">Bank Information</h4>
+            <Field Horizontal="true">
+                <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">Name</FieldLabel>
+                <FieldBody ColumnSize="ColumnSize.Is5">
+                    <TextEdit @bind-Text="@userInfo.BankAccount.Name"></TextEdit>
+                </FieldBody>
+            </Field>
+            <Field Horizontal="true">
+                <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">Card Number</FieldLabel>
+                <FieldBody ColumnSize="ColumnSize.Is5">
+                    <TextEdit @bind-Text="@userInfo.BankAccount.CardNumber"></TextEdit>
+                </FieldBody>
+            </Field>
+            <Field Horizontal="true">
+                <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">Expiration</FieldLabel>
+                <FieldBody ColumnSize="ColumnSize.Is5">
+                    <DateEdit @bind-Date="@userInfo.BankAccount.ExpirationDate"></DateEdit>
+                </FieldBody>
+            </Field>
+            <Field Horizontal="true">
+                <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">CVC</FieldLabel>
+                <FieldBody ColumnSize="ColumnSize.Is5">
+                    <NumericEdit @bind-Value="@userInfo.BankAccount.Cvc"></NumericEdit>
+                </FieldBody>
+            </Field>
+        }
 
         <Button class="submit-button" Type="ButtonType.Submit" Color="Color.Dark">Save</Button>
         <Alert Color="Color.Success" @bind-Visible="@alertVisible">

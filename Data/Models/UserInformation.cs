@@ -1,8 +1,8 @@
 ﻿namespace OnlineRetailersStore.Data.Models
 {
-    public class CustomerInformation
+    public class UserInformation
     {
-        public Customer Customer { get; set; } = new Customer();
+        public User User { get; set; } = new User();
         public Address Address { get; set; } = new Address();
         public BankAccount BankAccount { get; set; } = new BankAccount(); 
     }
