@@ -126,6 +126,7 @@ namespace OnlineRetailersStore
                 Description VARCHAR(50),
                 Price DECIMAL(15 , 2 ),
                 ImageSrc varchar(255),
+                Inventory INT(4),
                 SupplierId VARCHAR(36),
                 PRIMARY KEY (ProductId),
                 FOREIGN KEY (SupplierId)
@@ -133,10 +134,10 @@ namespace OnlineRetailersStore
             )";
             cmd.ExecuteNonQuery();
 
-            cmd.CommandText = "INSERT IGNORE INTO Product(ProductId , Name, Description, Price, ImageSrc, SupplierId) " +
-                                "VALUES('97e4b136-0d8d-4d82-b798-9e0706d6eb46', 'Microsoft Office 2019 Professional', 'Office Professional 2019 is for growing small businesses who want the classic Office apps plus Outlook, OneDrive, Publisher and Access1. A one-time purchase installed on 1 PC for use at work.', 439.99, 'https://file-cdn.goodoffer24.com/media/catalog/product/m/i/microsoft-office-2019-pro-plus-5-pc_go24.jpg', '18822c07-2d1c-4296-9152-a05fbb2b5704')," +
-                                        "('ccf38a4c-b98c-47be-a823-58e72fa60cd0', 'Adobe Acrobat Pro DC', 'More than five million organizations around the world rely on Acrobat DC to create and edit the smartest PDFs, convert PDFs to Microsoft Office formats, and so much more. When you’re on the move and you need to collaborate with colleagues in multiple locations, trust the power of Acrobat DC to make it happen.', 14.99, 'https://images-na.ssl-images-amazon.com/images/I/414BXP8VbnL._AC_.jpg', '96262c9b-bfde-44a1-bf7a-f871403c6723')," +
-                                        "('9a661973-d372-4dfe-b8fc-4844a61eefa9', 'Microsoft Windows 10 Pro', 'Windows 10 Pro includes all the features of Windows 10 Home, plus business functionality for encryption, remote log-in, creating virtual machines, and more', 199.99, 'https://m.media-amazon.com/images/I/61ejGUbgfWL._AC_SX679_.jpg', 'f1de43c0-5a73-46e5-9494-90f58ab6f077')";
+            cmd.CommandText = "INSERT IGNORE INTO Product(ProductId , Name, Description, Price, ImageSrc, Inventory, SupplierId) " +
+                                "VALUES('97e4b136-0d8d-4d82-b798-9e0706d6eb46', 'Microsoft Office 2019 Professional', 'Office Professional 2019 is for growing small businesses who want the classic Office apps plus Outlook, OneDrive, Publisher and Access1. A one-time purchase installed on 1 PC for use at work.', 439.99, 'https://file-cdn.goodoffer24.com/media/catalog/product/m/i/microsoft-office-2019-pro-plus-5-pc_go24.jpg', 5, '18822c07-2d1c-4296-9152-a05fbb2b5704')," +
+                                        "('ccf38a4c-b98c-47be-a823-58e72fa60cd0', 'Adobe Acrobat Pro DC', 'More than five million organizations around the world rely on Acrobat DC to create and edit the smartest PDFs, convert PDFs to Microsoft Office formats, and so much more. When you’re on the move and you need to collaborate with colleagues in multiple locations, trust the power of Acrobat DC to make it happen.', 14.99, 'https://images-na.ssl-images-amazon.com/images/I/414BXP8VbnL._AC_.jpg', 4, '96262c9b-bfde-44a1-bf7a-f871403c6723')," +
+                                        "('9a661973-d372-4dfe-b8fc-4844a61eefa9', 'Microsoft Windows 10 Pro', 'Windows 10 Pro includes all the features of Windows 10 Home, plus business functionality for encryption, remote log-in, creating virtual machines, and more', 199.99, 'https://m.media-amazon.com/images/I/61ejGUbgfWL._AC_SX679_.jpg', 3, 'f1de43c0-5a73-46e5-9494-90f58ab6f077')";
             cmd.ExecuteNonQuery();
 
             // Shopping_Cart
