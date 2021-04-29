@@ -12,6 +12,7 @@
     string shoppingCart;
     string orderHistory;
     ProductList productList;
+    List<int> quantityList = new List<int>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -26,6 +27,11 @@
             orderHistory = $"order-history/{CustomerId}";
 
             productList = ProductService.GetProductList();
+            for(int i = 0; i < productList.size; i++)
+            {
+                int quant = 0; //New quantity of 0
+                quantityList.Add(quant); //Populate quantityList  with 0s
+            }
         }
         else
         {
@@ -42,6 +48,16 @@
     {
         alertVisible = CustomerService.SaveCustomer(customerInfo);
         nav.NavigateTo("account/" + customerInfo.Customer.Id);
+    }
+
+    private void AddQuantity(int index)
+    {
+        quantityList[index]++;
+    }
+    private void RemoveQuantity(int index)
+    {
+        if (quantityList[index] == 0) return;
+        quantityList[index]--;
     }
 }
 
@@ -93,19 +109,21 @@ else
             @for (int size = 0; size < productList.size; size++)
             {
                 var localSize = size;
+                
                 <Column ColumnSize="ColumnSize.Is3">
                     <Card>
-                        <CardImage Source=@productList.list[localSize].imageSrc Alt="Placeholder image">
-                        </CardImage>
+                            <CardImage Source=@productList.list[localSize].imageSrc Alt="Placeholder image" Style="max-height:275px">
+                            </CardImage>
+                        
                         <CardBody>
                             <CardTitle Size="5" Weight="TextWeight.Bold">@productList.list[localSize].Name</CardTitle>
                             <CardText Class="card-text">
                                 @productList.list[localSize].Description
                             </CardText>
 
-                            <Button Color="Color.Secondary">+</Button>
-                            <text style="background-color:whitesmoke;display:inline-table">0</text>
-                            <Button Color="Color.Secondary">-</Button>
+                            <Button Color="Color.Secondary" Clicked="() => AddQuantity(localSize)">+</Button>
+                            <text style="background-color:whitesmoke;display:inline-table">@quantityList[localSize]</text>
+                            <Button Color="Color.Secondary" Clicked="() => RemoveQuantity(localSize)">-</Button>
                             <Button Color="Color.Primary" style="float: right">Buy</Button>
 
 
