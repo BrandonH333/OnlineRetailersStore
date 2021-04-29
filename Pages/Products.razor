@@ -1,0 +1,120 @@
+﻿@page "/products/{CustomerId}"
+@using OnlineRetailersStore.Data.Models
+@using OnlineRetailersStore.Data
+@inject NavigationManager nav
+
+@code {
+    [Parameter] public string CustomerId { get; set; }
+    CustomerInformation customerInfo;
+    bool alertVisible = false;
+    string home;
+    string account;
+    string shoppingCart;
+    string orderHistory;
+    ProductList productList;
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        if (!string.IsNullOrEmpty(CustomerId))
+        {
+            // Query for customer info so we can set the object and pass into data bindings into the blazorise front end component library below
+            customerInfo = CustomerService.GetCustomerInformationById(CustomerId);
+            home = $"home/{CustomerId}";
+            account = $"account/{CustomerId}";
+            shoppingCart = $"shopping-cart/{CustomerId}";
+            orderHistory = $"order-history/{CustomerId}";
+
+            productList = ProductService.GetProductList();
+        }
+        else
+        {
+            customerInfo = new CustomerInformation();
+            customerInfo.BankAccount.ExpirationDate = DateTime.Now;
+            home = $"/";
+            account = $"/";
+            shoppingCart = $"/";
+            orderHistory = $"/";
+        }
+    }
+
+    private void Save()
+    {
+        alertVisible = CustomerService.SaveCustomer(customerInfo);
+        nav.NavigateTo("account/" + customerInfo.Customer.Id);
+    }
+}
+
+<Bar Breakpoint="Breakpoint.Desktop" Background="Background.Light">
+    <BarMenu>
+        <BarStart>
+            <BarItem>
+                <BarLink To=@home>Home</BarLink>
+            </BarItem>
+
+            <BarItem>
+                <BarLink To=@account>Account</BarLink>
+            </BarItem>
+            <BarItem Style="background-color:darkgrey">
+                <BarLink>Product</BarLink>
+            </BarItem>
+
+            <BarItem>
+                <BarLink To=@shoppingCart>Shopping Cart</BarLink>
+            </BarItem>
+            <BarItem>
+                <BarLink To=@orderHistory>Order History</BarLink>
+            </BarItem>
+        </BarStart>
+    </BarMenu>
+</Bar>
+
+
+
+    @if (!string.IsNullOrEmpty(CustomerId))
+    {
+<h2 class="center-header">Products</h2> }
+else
+{
+<h2 class="center-header">Create Account</h2>
+}
+
+
+    <Row>
+        <Column ColumnSize="ColumnSize.Is12">
+            <Alert Color="Color.Primary" Visible="true" Class="align-content-center">
+                Products Page
+            </Alert>
+        </Column>
+    </Row>
+    <div class="product-wrap">
+        <Row>
+
+            @for (int size = 0; size < productList.size; size++)
+            {
+                var localSize = size;
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Card>
+                        <CardImage Source=@productList.list[localSize].imageSrc Alt="Placeholder image">
+                        </CardImage>
+                        <CardBody>
+                            <CardTitle Size="5" Weight="TextWeight.Bold">@productList.list[localSize].Name</CardTitle>
+                            <CardText Class="card-text">
+                                @productList.list[localSize].Description
+                            </CardText>
+
+                            <Button Color="Color.Secondary">+</Button>
+                            <text style="background-color:whitesmoke;display:inline-table">0</text>
+                            <Button Color="Color.Secondary">-</Button>
+                            <Button Color="Color.Primary" style="float: right">Buy</Button>
+
+
+
+                        </CardBody>
+                    </Card>
+                </Column>
+
+            }
+
+        </Row>
+    </div>
