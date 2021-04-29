@@ -8,5 +8,8 @@
         public string Price { get; set; }
         public string SupplierId { get; set; }
         public string imageSrc { get; set; }
+
+        public string amount { get; set; }
+
     }
 }

@@ -61,7 +61,7 @@ namespace OnlineRetailersStore.Data
                         int columnSize = 0;
                         while (data_reader.Read())
                         {
-                            for (var i = 0; i < count; i += 6)
+                            for (var i = 0; i < count; i += 7)
                             {
 
                                 //Debug.WriteLine(data_reader.GetValue(i));
@@ -71,7 +71,8 @@ namespace OnlineRetailersStore.Data
                                 product.Description = data_reader.GetValue(i + 2).ToString();
                                 product.Price = data_reader.GetValue(i + 3).ToString();
                                 product.imageSrc = data_reader.GetValue(i + 4).ToString();
-                                product.SupplierId = data_reader.GetValue(i + 5).ToString();
+                                product.amount = data_reader.GetValue(i + 5).ToString();
+                                product.SupplierId = data_reader.GetValue(i + 6).ToString();
                                 
 
                                 productList.list.Add(product);

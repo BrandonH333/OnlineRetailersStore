@@ -89,7 +89,9 @@
 
     @if (!string.IsNullOrEmpty(CustomerId))
     {
-<h2 class="center-header">Products</h2> }
+<h2 class="center-header"><Alert Color="Color.Primary" Visible="true" Style="overflow-wrap">
+    Products
+</Alert></h2> }
 else
 {
 <h2 class="center-header">Create Account</h2>
@@ -98,9 +100,6 @@ else
 
     <Row>
         <Column ColumnSize="ColumnSize.Is12">
-            <Alert Color="Color.Primary" Visible="true" Class="align-content-center">
-                Products Page
-            </Alert>
         </Column>
     </Row>
     <div class="product-wrap">
@@ -109,14 +108,24 @@ else
             @for (int size = 0; size < productList.size; size++)
             {
                 var localSize = size;
-                
+                bool inStock = (Int32.Parse(productList.list[localSize].amount) > 0);
                 <Column ColumnSize="ColumnSize.Is3">
                     <Card>
-                            <CardImage Source=@productList.list[localSize].imageSrc Alt="Placeholder image" Style="max-height:275px">
-                            </CardImage>
-                        
+                        <CardImage Source=@productList.list[localSize].imageSrc Alt="Placeholder image" Style="max-height:275px">
+                        </CardImage>
+
                         <CardBody>
                             <CardTitle Size="5" Weight="TextWeight.Bold">@productList.list[localSize].Name</CardTitle>
+                            @if (Int32.Parse(productList.list[localSize].amount) > 0)
+                            {
+                                <CardText Style="color: green">In stock </CardText>
+                                <CardText> Quantity: @productList.list[localSize].amount</CardText>
+                            }
+                            @if (Int32.Parse(productList.list[localSize].amount) <= 0)
+                            {
+                                <CardText Style="color: red">Out of stock </CardText>
+                                <CardText> Quantity: @productList.list[localSize].amount</CardText>
+                            }
                             <CardText Class="card-text">
                                 @productList.list[localSize].Description
                             </CardText>
@@ -124,7 +133,7 @@ else
                             <Button Color="Color.Secondary" Clicked="() => AddQuantity(localSize)">+</Button>
                             <text style="background-color:whitesmoke;display:inline-table">@quantityList[localSize]</text>
                             <Button Color="Color.Secondary" Clicked="() => RemoveQuantity(localSize)">-</Button>
-                            <Button Color="Color.Primary" style="float: right">Buy</Button>
+                            <Button Color="Color.Primary" style="float: right" Disabled="!inStock">Buy</Button>
 
 
 
@@ -135,4 +144,5 @@ else
             }
 
         </Row>
+        
     </div>
