@@ -5,16 +5,24 @@
 @inject NavigationManager nav
 
 @code {
+<<<<<<< HEAD
     [Parameter] public string UserId { get; set; }
     UserInformation userInfo;
     Sidebar sidebar;
+=======
+    [Parameter] public string CustomerId { get; set; }
+    CustomerInformation customerInfo;
+>>>>>>> ProductsPage
     bool alertVisible = false;
     string home;
     string products;
     string shoppingCart;
     string orderHistory;
+<<<<<<< HEAD
     string productManagement;
     string signOut;
+=======
+>>>>>>> ProductsPage
 
     protected override async Task OnInitializedAsync()
     {
@@ -48,6 +56,7 @@
     }
 }
 
+<<<<<<< HEAD
 <div class="sidebar-nav">
     <Sidebar @ref="sidebar">
         <SidebarContent>
@@ -100,6 +109,29 @@
         </SidebarContent>
     </Sidebar>
 </div>
+=======
+<Bar Breakpoint="Breakpoint.Desktop" Background="Background.Light">
+    <BarMenu>
+        <BarStart>
+            <BarItem>
+                <BarLink To=@home>Home</BarLink>
+            </BarItem>
+            <BarItem Style="background-color:darkgrey">
+                <BarLink>Account</BarLink>
+            </BarItem>
+            <BarItem>
+                <BarLink To=@products>Products</BarLink>
+            </BarItem>
+            <BarItem>
+                <BarLink To=@shoppingCart>Shopping Cart</BarLink>
+            </BarItem>
+            <BarItem>
+                <BarLink To=@orderHistory>Order History</BarLink>
+            </BarItem>
+        </BarStart>
+    </BarMenu>
+</Bar>
+>>>>>>> ProductsPage
 
 <div class="content-wrap">
 
