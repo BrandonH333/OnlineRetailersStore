@@ -182,6 +182,36 @@ namespace OnlineRetailersStore
                                         "('dc1bc158-f407-43c2-9965-e6b8f0b2d395', '2021-04-2020', 1, 1, 'ccf38a4c-b98c-47be-a823-58e72fa60cd0', 'cfaad4ca-2a0f-4f66-818f-6cd30bffcf4c')," +
                                         "('3e233380-9339-420a-9cc9-c0c6b1492733', '2021-03-30', 1, 2, '9a661973-d372-4dfe-b8fc-4844a61eefa9', 'a6eba3a9-becc-438b-8159-58c76fbc1b79')";
             cmd.ExecuteNonQuery();
+
+            // Order_history
+            cmd.CommandText = @"CREATE TABLE IF NOT EXISTS `order_history` (
+                `CustomerId` varchar(36) NOT NULL,
+                `Product_Id` varchar(36) DEFAULT NULL,
+                `Quantity` int(3) DEFAULT NULL,
+                `Price` decimal(15,2) DEFAULT NULL,
+                `Name` varchar(50) DEFAULT NULL,
+                `OrderId` varchar(36) DEFAULT NULL,
+                KEY `Name` (`Name`),
+                KEY `OrderId_idx` (`OrderId`),
+                KEY `Price_idx` (`Price`),
+                KEY `ProductId_idx` (`Product_Id`),
+                KEY `Quantity_idx` (`Quantity`),
+                KEY `CustomerId_idx` (`CustomerId`),
+                CONSTRAINT `CustomerId` FOREIGN KEY (`CustomerId`) REFERENCES `customer` (`CustomerId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+                CONSTRAINT `Name` FOREIGN KEY (`Name`) REFERENCES `product` (`Name`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+                CONSTRAINT `OrderId` FOREIGN KEY (`OrderId`) REFERENCES `order` (`OrderId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+                CONSTRAINT `Price` FOREIGN KEY (`Price`) REFERENCES `product` (`Price`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+                CONSTRAINT `ProductId` FOREIGN KEY (`Product_Id`) REFERENCES `product` (`ProductId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+                CONSTRAINT `Quantity` FOREIGN KEY (`Quantity`) REFERENCES `order` (`Quantity`) ON DELETE NO ACTION ON UPDATE NO ACTION
+            )";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT IGNORE INTO `order_history`" +
+                                "VALUES('a6eba3a9-becc-438b-8159-58c76fbc1b79', '9a661973-d372-4dfe-b8fc-4844a61eefa9', 2, 199.99, 'Microsoft Windows 10 Pro', '3e233380-9339-420a-9cc9-c0c6b1492733')," +
+                                        "('6553323f-46b6-4817-8eab-3e9e51957875', '97e4b136-0d8d-4d82-b798-9e0706d6eb46', 1, 439.99, 'Microsoft Office 2019 Professional', '5d9baa9c-6745-4c9b-bda7-d76135a1d8fe')," +
+                                        "('cfaad4ca-2a0f-4f66-818f-6cd30bffcf4c', 'ccf38a4c-b98c-47be-a823-58e72fa60cd0', 1, 14.99, 'Adobe Acrobat Pro DC', 'dc1bc158-f407-43c2-9965-e6b8f0b2d395')";
+            cmd.ExecuteNonQuery();
+
         }
     }
 }

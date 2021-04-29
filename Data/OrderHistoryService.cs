@@ -28,7 +28,7 @@ namespace OnlineRetailersStore.Data
                         orders.Add(new OrderHistory()
                         {
                             CustomerId = reader["CustomerId"] as string,
-                            ProductId = reader["ProductId"] as string,
+                            ProductId = reader["Product_Id"] as string,
                             Quantity = (int)(reader["Quantity"] as int?),
                             Price = (decimal)(reader["Price"] as decimal?),
                             Name = reader["Name"] as string,
