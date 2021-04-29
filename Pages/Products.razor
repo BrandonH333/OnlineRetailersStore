@@ -1,33 +1,38 @@
-﻿@page "/products/{CustomerId}"
+﻿@page "/products/{UserId}"
 @using OnlineRetailersStore.Data.Models
 @using OnlineRetailersStore.Data
 @inject NavigationManager nav
 
 @code {
-    [Parameter] public string CustomerId { get; set; }
-    UserInformation customerInfo;
+    [Parameter] public string UserId { get; set; }
+    UserInformation userInfo;
     bool alertVisible = false;
+    Sidebar sidebar;
     string home;
     string account;
     string shoppingCart;
     string orderHistory;
+    string productManagement;
+    string signOut;
     ProductList productList;
     List<int> quantityList = new List<int>();
 
     protected override async Task OnInitializedAsync()
     {
 
-        if (!string.IsNullOrEmpty(CustomerId))
+        if (!string.IsNullOrEmpty(UserId))
         {
             // Query for customer info so we can set the object and pass into data bindings into the blazorise front end component library below
-            customerInfo = UserService.GetUserInformationById(CustomerId);
-            home = $"home/{CustomerId}";
-            account = $"account/{CustomerId}";
-            shoppingCart = $"shopping-cart/{CustomerId}";
-            orderHistory = $"order-history/{CustomerId}";
+            userInfo = UserService.GetUserInformationById(UserId);
+            home = $"home/{UserId}";
+            account = $"account/{UserId}";
+            shoppingCart = $"shopping-cart/{UserId}";
+            orderHistory = $"order-history/{UserId}";
+            productManagement = $"product-management/{UserId}";
+            signOut = $"/";
 
             productList = ProductService.GetProductList();
-            for(int i = 0; i < productList.size; i++)
+            for (int i = 0; i < productList.size; i++)
             {
                 int quant = 0; //New quantity of 0
                 quantityList.Add(quant); //Populate quantityList  with 0s
@@ -35,8 +40,8 @@
         }
         else
         {
-            customerInfo = new UserInformation();
-            customerInfo.BankAccount.ExpirationDate = DateTime.Now;
+            userInfo = new UserInformation();
+            userInfo.BankAccount.ExpirationDate = DateTime.Now;
             home = $"/";
             account = $"/";
             shoppingCart = $"/";
@@ -46,8 +51,8 @@
 
     private void Save()
     {
-        alertVisible = UserService.SaveUser(customerInfo);
-        nav.NavigateTo("account/" + customerInfo.User.Id);
+        alertVisible = UserService.SaveUser(userInfo);
+        nav.NavigateTo("account/" + userInfo.User.Id);
     }
 
     private void AddQuantity(int index)
@@ -61,100 +66,132 @@
     }
 }
 
-<Bar Breakpoint="Breakpoint.Desktop" Background="Background.Light">
-    <BarMenu>
-        <BarStart>
-            <BarItem>
-                <BarLink To=@home>Home</BarLink>
-            </BarItem>
+<div class="sidebar-nav">
+    <Sidebar @ref="sidebar">
+        <SidebarContent>
+            <SidebarBrand>
+                <a href="/products">Online Retailers Store</a>
+            </SidebarBrand>
+            <SidebarNavigation>
+                <SidebarItem>
+                    <SidebarLink To=@home Title="Home">
+                        <Icon Name="IconName.Home" Margin="Margin.Is3.FromRight" />Home
+                    </SidebarLink>
+                </SidebarItem>
 
-            <BarItem>
-                <BarLink To=@account>Account</BarLink>
-            </BarItem>
-            <BarItem Style="background-color:darkgrey">
-                <BarLink>Product</BarLink>
-            </BarItem>
+                @if (!userInfo.User.Retailer)
+                {
+                    <SidebarItem>
+                        <SidebarLink To=@account Title="Accounts">
+                            <Icon Name="IconName.Gift" Margin="Margin.Is3.FromRight" />Account
+                        </SidebarLink>
+                    </SidebarItem>
+                    <SidebarItem>
+                        <SidebarLink Title="Product">
+                            <Icon Name="IconName.Fingerprint" Margin="Margin.Is3.FromRight" />Product
+                        </SidebarLink>
+                    </SidebarItem>
+                    <SidebarItem>
+                        <SidebarLink To=@shoppingCart Title="Shopping Cart">
+                            <Icon Name="IconName.ShoppingCart" Margin="Margin.Is3.FromRight" />Shopping Cart
+                        </SidebarLink>
+                    </SidebarItem>
+                    <SidebarItem>
+                        <SidebarLink To=@orderHistory Title="Order History">
+                            <Icon Name="IconName.History" Margin="Margin.Is3.FromRight" />Order History
+                        </SidebarLink>
+                    </SidebarItem>
+                }
+                else
+                {
+                    <SidebarItem>
+                        <SidebarLink To=@productManagement Title="Manage Products">
+                            <Icon Name="IconName.CheckSquare" Margin="Margin.Is3.FromRight" />Manage Products
+                        </SidebarLink>
+                    </SidebarItem>
+                }
+                <SidebarItem>
+                    <SidebarLink To=@signOut Title="Sign out">
+                        <Icon Name="IconName.User" Margin="Margin.Is3.FromRight" />Sign out
+                    </SidebarLink>
+                </SidebarItem>
+            </SidebarNavigation>
+        </SidebarContent>
+    </Sidebar>
+</div>
 
-            <BarItem>
-                <BarLink To=@shoppingCart>Shopping Cart</BarLink>
-            </BarItem>
-            <BarItem>
-                <BarLink To=@orderHistory>Order History</BarLink>
-            </BarItem>
-        </BarStart>
-    </BarMenu>
-</Bar>
 
-
-
-    @if (!string.IsNullOrEmpty(CustomerId))
-    {
-<h2 class="center-header"><Alert Color="Color.Primary" Visible="true" Style="overflow-wrap">
-    Products
-</Alert></h2> }
+@if (!string.IsNullOrEmpty(UserId))
+{
+    <h2 class="center-header">
+        <Alert Color="Color.Primary" Visible="true" Style="overflow-wrap">
+            Products
+        </Alert>
+    </h2> }
 else
 {
-<h2 class="center-header">Create Account</h2>
+    <h2 class="center-header">Create Account</h2>
 }
 
 
+<Row>
+    <Column ColumnSize="ColumnSize.Is12">
+    </Column>
+</Row>
+<div class="product-wrap">
     <Row>
-        <Column ColumnSize="ColumnSize.Is12">
-        </Column>
-    </Row>
-    <div class="product-wrap">
-        <Row>
 
-            @for (int size = 0; size < productList.size; size++)
-            {
-                var localSize = size;
-                bool inStock = (Int32.Parse(productList.list[localSize].amount) > 0);
-                <Column ColumnSize="ColumnSize.Is3">
-                    <Card>
-                        <CardImage Source=@productList.list[localSize].imageSrc Alt="Placeholder image" Style="max-height:275px">
-                        </CardImage>
+        @for (int size = 0; size < productList.size; size++)
+        {
+            var localSize = size;
+            bool inStock = (Int32.Parse(productList.list[localSize].amount) > 0);
+            <Column ColumnSize="ColumnSize.Is3">
+                <Card>
+                    <CardImage Source=@productList.list[localSize].imageSrc Alt="Placeholder image" Style="max-height:225px">
+                    </CardImage>
 
-                        <CardBody>
-                            <CardTitle Size="5" Weight="TextWeight.Bold">@productList.list[localSize].Name</CardTitle>
-                            @if (Int32.Parse(productList.list[localSize].amount) > 0)
-                            {
-                                <Row Gutter="(32,16)">
-                                    <Column ColumnSize="ColumnSize.Is6">
-                                        <CardText Style="color: green"> In stock </CardText>
-                                    </Column>
-                                    <Column ColumnSize="ColumnSize.Is6">
-                                        <CardText Style="font-size:16px"> Quantity: @productList.list[localSize].amount</CardText>
-
-                                    </Column></Row>
-                    
-                }
-                            @if (Int32.Parse(productList.list[localSize].amount) <= 0)
-                            {
-                                <Column ColumnSize="ColumnSize.Is8">
-                                    <CardText Style="color: red">Out of stock </CardText>
-                                </Column><Column ColumnSize="ColumnSize.Is4">
-                                    <CardText> Quantity: @productList.list[localSize].amount</CardText>
+                    <CardBody>
+                        <CardTitle Size="5" Weight="TextWeight.Bold">@productList.list[localSize].Name</CardTitle>
+                        @if (Int32.Parse(productList.list[localSize].amount) > 0)
+                        {
+                            <Row Gutter="(32,16)">
+                                <Column ColumnSize="ColumnSize.Is5">
+                                    <CardText Style="color: green; font-size:14px"> In stock </CardText>
                                 </Column>
+                                <Column ColumnSize="ColumnSize.Is7">
+                                    <CardText Style="font-size:16px"> Quantity: @productList.list[localSize].amount</CardText>
 
-
-                            }
-                            <CardText Style="font-size:small">
-                                @productList.list[localSize].Description
-                            </CardText>
-
-                            <Button Color="Color.Secondary" Clicked="() => AddQuantity(localSize)">+</Button>
-                            <text style="background-color:whitesmoke;display:inline-table">@quantityList[localSize]</text>
-                            <Button Color="Color.Secondary" Clicked="() => RemoveQuantity(localSize)">-</Button>
-                            <Button Color="Color.Primary" style="float: right" Disabled="!inStock">Buy</Button>
-
-
-
-                            </CardBody>
-                            </Card>
-                            </Column>
+                                </Column>
+                            </Row>
 
                         }
+                        @if (Int32.Parse(productList.list[localSize].amount) <= 0)
+                        {
+                            <Column ColumnSize="ColumnSize.Is8">
+                                <CardText Style="color: red">Out of stock </CardText>
+                            </Column><Column ColumnSize="ColumnSize.Is4">
+                                <CardText> Quantity: @productList.list[localSize].amount</CardText>
+                            </Column>
 
-        </Row>
-        
-    </div>
+
+                        }
+                        <CardText Style="font-size:small">
+                            @productList.list[localSize].Description
+                        </CardText>
+
+                        <Button Color="Color.Secondary" Clicked="() => AddQuantity(localSize)">+</Button>
+                        <text style="background-color:whitesmoke;display:inline-table">@quantityList[localSize]</text>
+                        <Button Color="Color.Secondary" Clicked="() => RemoveQuantity(localSize)">-</Button>
+                        <Button Color="Color.Primary" style="float: right" Disabled="!inStock">Buy</Button>
+
+
+
+                    </CardBody>
+                </Card>
+            </Column>
+
+        }
+
+    </Row>
+
+</div>
