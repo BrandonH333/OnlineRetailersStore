@@ -1,26 +1,30 @@
-﻿@page "/home/{CustomerId}"
+﻿@page "/home/{UserId}"
 @using OnlineRetailersStore.Data.Models
 @using OnlineRetailersStore.Data
 @inject NavigationManager nav
 
 @code {
-    [Parameter] public string CustomerId { get; set; }
+    [Parameter] public string UserId { get; set; }
     Sidebar sidebar;
     string account;
     string products;
     string shoppingCart;
     string orderHistory;
-    Customer customer;
+    string productManagement;
+    string signOut;
+    User user;
 
     protected override async Task OnInitializedAsync()
     {
-        if (!string.IsNullOrEmpty(CustomerId))
+        if (!string.IsNullOrEmpty(UserId))
         {
-            customer = CustomerService.GetCustomerById(CustomerId);
-            account = $"account/{CustomerId}";
-            products = $"products/{CustomerId}";
-            shoppingCart = $"shopping-cart/{CustomerId}";
-            orderHistory = $"order-history/{CustomerId}";
+            user = UserService.GetUserById(UserId);
+            account = $"account/{UserId}";
+            products = $"products/{UserId}";
+            shoppingCart = $"shopping-cart/{UserId}";
+            orderHistory = $"order-history/{UserId}";
+            productManagement = $"product-management/{UserId}";
+            signOut = $"/";
         }
         else
         {
@@ -46,19 +50,35 @@
                         <Icon Name="IconName.Fingerprint" Margin="Margin.Is3.FromRight" />Account
                     </SidebarLink>
                 </SidebarItem>
+                @if (!user.Retailer)
+                {
+                    <SidebarItem>
+                        <SidebarLink To=@products Title="Products">
+                            <Icon Name="IconName.Gift" Margin="Margin.Is3.FromRight" />Products
+                        </SidebarLink>
+                    </SidebarItem>
+                    <SidebarItem>
+                        <SidebarLink To=@shoppingCart Title="Shopping Cart">
+                            <Icon Name="IconName.ShoppingCart" Margin="Margin.Is3.FromRight" />Shopping Cart
+                        </SidebarLink>
+                    </SidebarItem>
+                    <SidebarItem>
+                        <SidebarLink To=@orderHistory Title="Order History">
+                            <Icon Name="IconName.History" Margin="Margin.Is3.FromRight" />Order History
+                        </SidebarLink>
+                    </SidebarItem>
+                }
+                else
+                {
+                    <SidebarItem>
+                        <SidebarLink To=@productManagement Title="Manage Products">
+                            <Icon Name="IconName.CheckSquare" Margin="Margin.Is3.FromRight" />Manage Products
+                        </SidebarLink>
+                    </SidebarItem>
+                }
                 <SidebarItem>
-                    <SidebarLink To=@products Title="Products">
-                        <Icon Name="IconName.Gift" Margin="Margin.Is3.FromRight" />Products
-                    </SidebarLink>
-                </SidebarItem>
-                <SidebarItem>
-                    <SidebarLink To=@shoppingCart Title="Shopping Cart">
-                        <Icon Name="IconName.ShoppingCart" Margin="Margin.Is3.FromRight" />Shopping Cart
-                    </SidebarLink>
-                </SidebarItem>
-                <SidebarItem>
-                    <SidebarLink To=@orderHistory Title="Order History">
-                        <Icon Name="IconName.History" Margin="Margin.Is3.FromRight" />Order History
+                    <SidebarLink To=@signOut Title="Sign out">
+                        <Icon Name="IconName.User" Margin="Margin.Is3.FromRight" />Sign out
                     </SidebarLink>
                 </SidebarItem>
             </SidebarNavigation>
@@ -67,5 +87,5 @@
 </div>
 <div class="content-wrap">
     <h2 class="center-header">Online Retailers Store</h2>
-    <h2 class="center-header">Welcome @customer.FirstName</h2>
+    <h2 class="center-header">Welcome @user.FirstName</h2>
 </div>

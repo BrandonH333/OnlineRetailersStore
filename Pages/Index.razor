@@ -4,7 +4,7 @@
 
 @code{
     bool alertVisible = false;
-    string customerId;
+    string userId;
     string username;
     string password;
 
@@ -18,12 +18,12 @@
         }
         else
         {
-            customerId = CustomerService.GetCustomerIdByUsernameAndPassword(username, password);
+            userId = UserService.GetUserIdByUsernameAndPassword(username, password);
         }
 
-        if (customerId != null)
+        if (userId != null)
         {
-            nav.NavigateTo($"/home/{customerId}");
+            nav.NavigateTo($"/home/{userId}");
         }
         else
         {
