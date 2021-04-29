@@ -5,7 +5,6 @@
 
 @code {
     [Parameter] public string CustomerId { get; set; }
-    Sidebar sidebar;
     string account;
     string products;
     string shoppingCart;
@@ -29,42 +28,27 @@
     }
 }
 
-<div class="sidebar-nav">
-    <Sidebar @ref="sidebar">
-        <SidebarContent>
-            <SidebarBrand>
-                <a href="/products">Online Retailers Store</a>
-            </SidebarBrand>
-            <SidebarNavigation>
-                <SidebarItem>
-                    <SidebarLink Title="Home">
-                        <Icon Name="IconName.Home" Margin="Margin.Is3.FromRight" />Home
-                    </SidebarLink>
-                </SidebarItem>
-                <SidebarItem>
-                    <SidebarLink To=@account Title="Account">
-                        <Icon Name="IconName.Fingerprint" Margin="Margin.Is3.FromRight" />Account
-                    </SidebarLink>
-                </SidebarItem>
-                <SidebarItem>
-                    <SidebarLink To=@products Title="Products">
-                        <Icon Name="IconName.Gift" Margin="Margin.Is3.FromRight" />Products
-                    </SidebarLink>
-                </SidebarItem>
-                <SidebarItem>
-                    <SidebarLink To=@shoppingCart Title="Shopping Cart">
-                        <Icon Name="IconName.ShoppingCart" Margin="Margin.Is3.FromRight" />Shopping Cart
-                    </SidebarLink>
-                </SidebarItem>
-                <SidebarItem>
-                    <SidebarLink To=@orderHistory Title="Order History">
-                        <Icon Name="IconName.History" Margin="Margin.Is3.FromRight" />Order History
-                    </SidebarLink>
-                </SidebarItem>
-            </SidebarNavigation>
-        </SidebarContent>
-    </Sidebar>
-</div>
+<Bar Breakpoint="Breakpoint.Desktop" Background="Background.Light">
+    <BarMenu>
+        <BarStart>
+            <BarItem Style="background-color:darkgrey">
+                <BarLink>Home</BarLink>
+            </BarItem>
+            <BarItem>
+                <BarLink To=@account>Account</BarLink>
+            </BarItem>
+            <BarItem>
+                <BarLink To=@products>Products</BarLink>
+            </BarItem>
+            <BarItem>
+                <BarLink To=@shoppingCart>Shopping Cart</BarLink>
+            </BarItem>
+            <BarItem>
+                <BarLink To=@orderHistory>Order History</BarLink>
+            </BarItem>
+        </BarStart>
+    </BarMenu>
+</Bar>
 <div class="content-wrap">
     <h2 class="center-header">Online Retailers Store</h2>
     <h2 class="center-header">Welcome @customer.FirstName</h2>

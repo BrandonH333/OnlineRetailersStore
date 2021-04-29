@@ -31,6 +31,7 @@ namespace OnlineRetailersStore.Data
             return customerId;
         }
 
+
         public static Customer GetCustomerById(string customerId)
         {
             Customer customer = null;
