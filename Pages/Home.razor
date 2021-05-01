@@ -10,8 +10,7 @@
     string products;
     string shoppingCart;
     string orderHistory;
-    string productManagement;
-    string signOut;
+    string manageProducts;
     User user;
 
     protected override async Task OnInitializedAsync()
@@ -23,8 +22,7 @@
             products = $"products/{UserId}";
             shoppingCart = $"shopping-cart/{UserId}";
             orderHistory = $"order-history/{UserId}";
-            productManagement = $"product-management/{UserId}";
-            signOut = $"/";
+            manageProducts = $"manage-products/{UserId}";
         }
         else
         {
@@ -71,13 +69,13 @@
                 else
                 {
                     <SidebarItem>
-                        <SidebarLink To=@productManagement Title="Manage Products">
+                        <SidebarLink To=@manageProducts Title="Manage Products">
                             <Icon Name="IconName.CheckSquare" Margin="Margin.Is3.FromRight" />Manage Products
                         </SidebarLink>
                     </SidebarItem>
                 }
                 <SidebarItem>
-                    <SidebarLink To=@signOut Title="Sign out">
+                    <SidebarLink To="/" Title="Sign out">
                         <Icon Name="IconName.User" Margin="Margin.Is3.FromRight" />Sign out
                     </SidebarLink>
                 </SidebarItem>
@@ -86,6 +84,6 @@
     </Sidebar>
 </div>
 <div class="content-wrap">
-    <h2 class="center-header">Online Retailers Store</h2>
+    <h1 class="center-header">Online Retailers Store</h1>
     <h2 class="center-header">Welcome @user.FirstName</h2>
 </div>

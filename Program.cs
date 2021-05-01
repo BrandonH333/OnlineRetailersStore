@@ -124,8 +124,8 @@ namespace OnlineRetailersStore
             cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Product (
                 ProductId VARCHAR(36),
                 Name VARCHAR(50),
-                Description VARCHAR(50),
-                Price DECIMAL(15 , 2 ),
+                Description VARCHAR(1000),
+                Price DECIMAL(15, 2),
                 ImageSrc varchar(255),
                 Inventory INT(4),
                 SupplierId VARCHAR(36),

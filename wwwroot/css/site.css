@@ -22,11 +22,39 @@ a, .btn-link {
     padding-top: 1.1rem;
 }
 
+.product-image{
+    height: 300px;
+}
+
+.product-description{
+    height: 170px;
+}
+
 .content-wrap {
     max-width: 900px;
     margin: 0 auto;
     padding: 50px;
     overflow: hidden;
+}
+
+.product-management-wrap {
+    max-width: 2000px;
+    padding: 50px;
+    overflow: hidden;
+}
+
+#save-button{
+    margin-top: 20px;
+    float:right;
+}
+
+#create-product-button {
+    margin-top: 20px;
+    margin-right:1300px;
+}
+
+#product-column{
+    float:left;    
 }
 
 .sidebar-nav {
