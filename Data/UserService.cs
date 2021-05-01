@@ -8,7 +8,7 @@ namespace OnlineRetailersStore.Data
     {
         public static string GetUserIdByUsernameAndPassword(string username, string password)
         {
-            string userId = string.Empty;
+            string? userId = null;
 
             using (var conn = new MySqlConnection(OnlineRetailersStoreContext.ConnectionString))
             {
@@ -18,7 +18,7 @@ namespace OnlineRetailersStore.Data
                     $"WHERE Username = '{username}' " +
                     $"AND Password = '{password}'";
 
-                MySqlCommand cmd = new MySqlCommand(sql, conn);
+                var cmd = new MySqlCommand(sql, conn);
 
                 using (var reader = cmd.ExecuteReader())
                 {
@@ -41,7 +41,7 @@ namespace OnlineRetailersStore.Data
                     $"FROM online_retailers_store.user " +
                     $"WHERE UserId = '{userId}'";
 
-                MySqlCommand cmd = new MySqlCommand(sql, conn);
+                var cmd = new MySqlCommand(sql, conn);
 
                 using (var reader = cmd.ExecuteReader())
                 {
@@ -76,7 +76,7 @@ namespace OnlineRetailersStore.Data
                     $"LEFT JOIN online_retailers_store.bank_account ON bank_account.UserId = User.UserId " +
                     $"WHERE user.UserId = '{userId}'";
 
-                MySqlCommand cmd = new MySqlCommand(sql, conn);
+                var cmd = new MySqlCommand(sql, conn);
 
                 using (var reader = cmd.ExecuteReader())
                 {
@@ -138,7 +138,7 @@ namespace OnlineRetailersStore.Data
                         $"FROM online_retailers_store.user " +
                         $"WHERE Username = '{user.User.Username}' ";
 
-                    MySqlCommand cmd = new MySqlCommand(sql, conn);
+                    var cmd = new MySqlCommand(sql, conn);
 
                     using (var reader = cmd.ExecuteReader())
                     {

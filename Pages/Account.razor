@@ -13,8 +13,7 @@
     string products;
     string shoppingCart;
     string orderHistory;
-    string productManagement;
-    string signOut;
+    string manageProducts;
 
     protected override async Task OnInitializedAsync()
     {
@@ -26,18 +25,17 @@
             products = $"products/{UserId}";
             shoppingCart = $"shopping-cart/{UserId}";
             orderHistory = $"order-history/{UserId}";
-            productManagement = $"product-management/{UserId}";
-            signOut = $"/";
+            manageProducts = $"manage-products/{UserId}";
         }
         else
         {
             userInfo = new UserInformation();
             userInfo.BankAccount.ExpirationDate = DateTime.Now;
             userInfo.User.Retailer = false;
-            home = $"/";
-            products = $"/";
-            shoppingCart = $"/";
-            orderHistory = $"/";
+            home = "/";
+            products = "/";
+            shoppingCart = "/";
+            orderHistory = "/";
         }
     }
 
@@ -86,13 +84,13 @@
                 else
                 {
                     <SidebarItem>
-                        <SidebarLink To=@productManagement Title="Manage Products">
+                        <SidebarLink To=@manageProducts Title="Manage Products">
                             <Icon Name="IconName.CheckSquare" Margin="Margin.Is3.FromRight" />Manage Products
                         </SidebarLink>
                     </SidebarItem>
                 }
                 <SidebarItem>
-                    <SidebarLink To=@signOut Title="Sign out">
+                    <SidebarLink To="/" Title="Sign out">
                         <Icon Name="IconName.User" Margin="Margin.Is3.FromRight" />Sign out
                     </SidebarLink>
                 </SidebarItem>
@@ -116,25 +114,25 @@
         <Field Horizontal="true">
             <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">First Name</FieldLabel>
             <FieldBody ColumnSize="ColumnSize.Is5">
-                <TextEdit @bind-Text="@userInfo.User.FirstName"></TextEdit>
+                <TextEdit @bind-Text="@userInfo.User.FirstName" Required></TextEdit>
             </FieldBody>
         </Field>
         <Field Horizontal="true">
             <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">Last Name</FieldLabel>
             <FieldBody ColumnSize="ColumnSize.Is5">
-                <TextEdit @bind-Text="@userInfo.User.LastName"></TextEdit>
+                <TextEdit @bind-Text="@userInfo.User.LastName" Required></TextEdit>
             </FieldBody>
         </Field>
         <Field Horizontal="true">
             <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">Username</FieldLabel>
             <FieldBody ColumnSize="ColumnSize.Is5">
-                <TextEdit @bind-Text="@userInfo.User.Username"></TextEdit>
+                <TextEdit @bind-Text="@userInfo.User.Username" Required></TextEdit>
             </FieldBody>
         </Field>
         <Field Horizontal="true">
             <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">Password</FieldLabel>
             <FieldBody ColumnSize="ColumnSize.Is5">
-                <TextEdit @bind-Text="@userInfo.User.Password"></TextEdit>
+                <TextEdit @bind-Text="@userInfo.User.Password" Required></TextEdit>
             </FieldBody>
         </Field>
 
@@ -145,7 +143,7 @@
             <Field Horizontal="true">
                 <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">Address1</FieldLabel>
                 <FieldBody ColumnSize="ColumnSize.Is5">
-                    <TextEdit @bind-Text="@userInfo.Address.Address1"></TextEdit>
+                    <TextEdit @bind-Text="@userInfo.Address.Address1" Required></TextEdit>
                 </FieldBody>
             </Field>
             <Field Horizontal="true">
@@ -157,25 +155,25 @@
             <Field Horizontal="true">
                 <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">City</FieldLabel>
                 <FieldBody ColumnSize="ColumnSize.Is5">
-                    <TextEdit @bind-Text="@userInfo.Address.City"></TextEdit>
+                    <TextEdit @bind-Text="@userInfo.Address.City" Required></TextEdit>
                 </FieldBody>
             </Field>
             <Field Horizontal="true">
                 <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">State</FieldLabel>
                 <FieldBody ColumnSize="ColumnSize.Is5">
-                    <TextEdit @bind-Text="@userInfo.Address.State"></TextEdit>
+                    <TextEdit @bind-Text="@userInfo.Address.State" Required></TextEdit>
                 </FieldBody>
             </Field>
             <Field Horizontal="true">
                 <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">Zip Code</FieldLabel>
                 <FieldBody ColumnSize="ColumnSize.Is5">
-                    <NumericEdit @bind-Value="@userInfo.Address.ZipCode"></NumericEdit>
+                    <NumericEdit @bind-Value="@userInfo.Address.ZipCode" Required></NumericEdit>
                 </FieldBody>
             </Field>
             <Field Horizontal="true">
                 <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">Country</FieldLabel>
                 <FieldBody ColumnSize="ColumnSize.Is5">
-                    <TextEdit @bind-Text="@userInfo.Address.Country"></TextEdit>
+                    <TextEdit @bind-Text="@userInfo.Address.Country" Required></TextEdit>
                 </FieldBody>
             </Field>
 
@@ -183,25 +181,25 @@
             <Field Horizontal="true">
                 <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">Name</FieldLabel>
                 <FieldBody ColumnSize="ColumnSize.Is5">
-                    <TextEdit @bind-Text="@userInfo.BankAccount.Name"></TextEdit>
+                    <TextEdit @bind-Text="@userInfo.BankAccount.Name" Required></TextEdit>
                 </FieldBody>
             </Field>
             <Field Horizontal="true">
                 <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">Card Number</FieldLabel>
                 <FieldBody ColumnSize="ColumnSize.Is5">
-                    <TextEdit @bind-Text="@userInfo.BankAccount.CardNumber"></TextEdit>
+                    <TextEdit @bind-Text="@userInfo.BankAccount.CardNumber" Required></TextEdit>
                 </FieldBody>
             </Field>
             <Field Horizontal="true">
                 <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">Expiration</FieldLabel>
                 <FieldBody ColumnSize="ColumnSize.Is5">
-                    <DateEdit @bind-Date="@userInfo.BankAccount.ExpirationDate"></DateEdit>
+                    <DateEdit @bind-Date="@userInfo.BankAccount.ExpirationDate" Required></DateEdit>
                 </FieldBody>
             </Field>
             <Field Horizontal="true">
                 <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">CVC</FieldLabel>
                 <FieldBody ColumnSize="ColumnSize.Is5">
-                    <NumericEdit @bind-Value="@userInfo.BankAccount.Cvc"></NumericEdit>
+                    <NumericEdit @bind-Value="@userInfo.BankAccount.Cvc" Required></NumericEdit>
                 </FieldBody>
             </Field>
         }

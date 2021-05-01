@@ -1,0 +1,128 @@
+﻿@page "/manage-products/{UserId}"
+@using OnlineRetailersStore.Data.Models
+@using OnlineRetailersStore.Data
+@inject NavigationManager nav
+
+@code {
+    [Parameter] public string UserId { get; set; }
+    Sidebar sidebar;
+    string home;
+    string account;
+    List<Product> products;
+    string supplierName;
+    bool alertVisible = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!string.IsNullOrEmpty(UserId))
+        {
+            products = ProductService.GetSupplierProductsByUserId(UserId);
+            supplierName = SupplierService.GetSupplierNameByUserId(UserId);
+            home = $"home/{UserId}";
+            account = $"account/{UserId}";
+        }
+        else
+        {
+            nav.NavigateTo("/");
+        }
+    }
+
+    private void Save()
+    {
+        alertVisible = ProductService.SaveProducts(products);
+        nav.NavigateTo("manage-products/" + UserId);
+    }
+
+    private void CreateProductButtonClicked()
+    {
+        products.Add(new Product
+        {
+            Name = string.Empty,
+            Description = string.Empty,
+            Price = 0,
+            SupplierId = products[0].SupplierId,
+            ImageSrc = string.Empty,
+            Inventory = 0
+        });
+    }
+}
+
+<div class="sidebar-nav">
+    <Sidebar @ref="sidebar">
+        <SidebarContent>
+            <SidebarBrand>
+                <a href="/products">Online Retailers Store</a>
+            </SidebarBrand>
+            <SidebarNavigation>
+                <SidebarItem>
+                    <SidebarLink To=@home Title="Home">
+                        <Icon Name="IconName.Home" Margin="Margin.Is3.FromRight" />Home
+                    </SidebarLink>
+                </SidebarItem>
+                <SidebarItem>
+                    <SidebarLink To=@account Title="Account">
+                        <Icon Name="IconName.Fingerprint" Margin="Margin.Is3.FromRight" />Account
+                    </SidebarLink>
+                </SidebarItem>
+                <SidebarItem>
+                    <SidebarLink Title="Manage Products">
+                        <Icon Name="IconName.CheckSquare" Margin="Margin.Is3.FromRight" />Manage Products
+                    </SidebarLink>
+                </SidebarItem>
+
+                <SidebarItem>
+                    <SidebarLink To="/" Title="Sign out">
+                        <Icon Name="IconName.User" Margin="Margin.Is3.FromRight" />Sign out
+                    </SidebarLink>
+                </SidebarItem>
+            </SidebarNavigation>
+        </SidebarContent>
+    </Sidebar>
+</div>
+<div class="product-management-wrap">
+    <h1 class="center-header">@supplierName</h1>
+    <Alert Color="Color.Success" @bind-Visible="@alertVisible">
+        <AlertDescription>
+            Your save was successful
+        </AlertDescription>
+        <CloseButton />
+    </Alert>
+    <EditForm Model="@products" OnValidSubmit="Save" Context="OrderService">
+        @foreach (var product in products)
+        {
+            <Column id="product-column" ColumnSize="ColumnSize.Is3">
+                <Card>
+                    <CardImage Source=@product.ImageSrc Alt="Placeholder image" Class="product-image"></CardImage>
+                    <CardBody>
+                        <Field>
+                            <FieldLabel>Image Source</FieldLabel>
+                            <MemoEdit Rows="3" @bind-Text=@product.ImageSrc Required/>
+                        </Field>
+                        <Field>
+                            <FieldLabel>Product Name</FieldLabel>
+                            <TextEdit @bind-Text=@product.Name Required/>
+                        </Field>
+                        <Field Horizontal="true">
+                            <FieldLabel ColumnSize="ColumnSize.Is3">Price</FieldLabel>
+                            <FieldBody ColumnSize="ColumnSize.Is4">
+                                <NumericEdit @bind-Value=@product.Price Required/>
+                            </FieldBody>
+                        </Field>
+                        <Field Horizontal="true">
+                            <FieldLabel ColumnSize="ColumnSize.Is3">Inventory</FieldLabel>
+                            <FieldBody ColumnSize="ColumnSize.Is4">
+                                <NumericEdit @bind-Value=@product.Inventory Required/>
+                            </FieldBody>
+                        </Field>
+                        <Field>
+                            <FieldLabel>Description</FieldLabel>
+                            <MemoEdit Rows="5" @bind-Text=@product.Description Required/>
+                        </Field>
+                        <Button id="save-button" Color="Color.Secondary" Type="ButtonType.Submit">Save</Button>
+                    </CardBody>
+                </Card>
+            </Column>
+        }
+    </EditForm>
+    <Button id="create-product-button" Color="Color.Primary" Clicked="@CreateProductButtonClicked">Create Product</Button>
+</div>
