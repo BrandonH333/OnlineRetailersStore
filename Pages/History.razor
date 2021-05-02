@@ -1,0 +1,132 @@
+﻿@page "/order-history/{UserId}"
+@using OnlineRetailersStore.Data.Models
+@using OnlineRetailersStore.Data
+
+@inject NavigationManager nav
+
+@code {
+    [Parameter] public string UserId { get; set; }
+    List<OrderHistory> userOrders;
+    Sidebar sidebar;
+    User user;
+
+    bool alertVisible = false;
+    string home;
+    string account;
+    string products;
+    string shoppingCart;
+    string orderHistory;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!string.IsNullOrEmpty(UserId))
+        {
+            user = UserService.GetUserById(UserId);
+            home = $"home/{UserId}";
+            account = $"account/{UserId}";
+            products = $"products/{UserId}";
+            shoppingCart = $"shopping-cart/{UserId}";
+            orderHistory = $"order-history/{UserId}";
+        }
+        else
+        {
+            home = $"/";
+            account = $"/";
+            products = $"/";
+            shoppingCart = $"/";
+            orderHistory = $"/";
+
+        }
+
+        userOrders = OrderHistoryService.OrdersByUserId(UserId);
+
+    }
+
+
+}
+
+
+<div class="sidebar-nav">
+    <Sidebar @ref="sidebar">
+        <SidebarContent>
+            <SidebarBrand>
+                <a href="/products">Online Retailers Store</a>
+            </SidebarBrand>
+            <SidebarNavigation>
+                <SidebarItem>
+                    <SidebarLink To=@home Title="Home">
+                        <Icon Name="IconName.Home" Margin="Margin.Is3.FromRight" />Home
+                    </SidebarLink>
+                </SidebarItem>
+                <SidebarItem>
+                    <SidebarLink To=@account Title="Account">
+                        <Icon Name="IconName.Fingerprint" Margin="Margin.Is3.FromRight" />Account
+                    </SidebarLink>
+                </SidebarItem>
+                <SidebarItem>
+                    <SidebarLink To=@products Title="Products">
+                        <Icon Name="IconName.Gift" Margin="Margin.Is3.FromRight" />Products
+                    </SidebarLink>
+                </SidebarItem>
+                <SidebarItem>
+                    <SidebarLink To=@shoppingCart Title="Shopping Cart">
+                        <Icon Name="IconName.ShoppingCart" Margin="Margin.Is3.FromRight" />Shopping Cart
+                    </SidebarLink>
+                </SidebarItem>
+                <SidebarItem>
+                    <SidebarLink To=@orderHistory Title="Order History">
+                        <Icon Name="IconName.History" Margin="Margin.Is3.FromRight" />Order History
+                    </SidebarLink>
+                </SidebarItem>
+                <SidebarItem>
+                    <SidebarLink To="/" Title="Sign out">
+                        <Icon Name="IconName.User" Margin="Margin.Is3.FromRight" />Sign out
+                    </SidebarLink>
+                </SidebarItem>
+            </SidebarNavigation>
+        </SidebarContent>
+    </Sidebar>
+</div>
+
+
+@if (!string.IsNullOrEmpty(UserId))
+{
+    <h2 class="center-header">
+        <Alert Color="Color.Primary" Visible="true" Style="overflow-wrap">
+            Order History
+        </Alert>
+    </h2>
+}
+else
+{
+    <h2 class="center-header">Create Account</h2>
+}
+
+
+
+<div class="table-section" style="margin-left: 250px; margin-right: 50px; }">
+    <table id="order-history-table" style="width: 100%; margin: auto;">
+        <tr>
+            <th style="text-align:center">Order Id</th>
+            <th style="text-align:center">Product Id</th>
+            <th style="text-align:center">Product Name</th>
+            <th style="text-align:center">Order Date</th>
+            <th style="text-align:center">Line Item Id</th>
+            <th style="text-align:center">Quantity</th>
+            <th style="text-align:center">Total Price</th>
+        </tr>
+
+        @foreach (var order in userOrders)
+        {
+            <tr>
+                <td>@order.OrderId</td>
+                <td>@order.ProductId</td>
+                <td>@order.Name</td>
+                <td>@order.CreatedDate</td>
+                <td>@order.LineItemId</td>
+                <td>@order.Quantity</td>
+                <td>$@((order.Price * order.Quantity).ToString())</td>
+            </tr>
+        }
+    </table>
+</div>
