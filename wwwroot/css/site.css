@@ -140,3 +140,8 @@ a, .btn-link {
 #order-history-table th, #order-history-table tr, #order-history-table td {
     text-align: center;
 }
+
+    #order-history-table tr:hover, #order-history-table td:hover {
+        text-align: center;
+        background-color: #ddd;
+    }
