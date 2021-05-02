@@ -9,7 +9,7 @@ namespace OnlineRetailersStore.Data
 {
     public class OrderHistoryService
     {
-        public static List<OrderHistory> OrdersByCustomerId(string customerId)
+        public static List<OrderHistory> OrdersByUserId(string userId)
         {
             List<OrderHistory> orders = new List<OrderHistory>();
             using (var conn = new MySqlConnection(OnlineRetailersStoreContext.ConnectionString))
@@ -17,7 +17,7 @@ namespace OnlineRetailersStore.Data
                 conn.OpenAsync();
                 var sql = $"SELECT * " +
                     $"FROM online_retailers_store.order_history " +
-                    $"WHERE CustomerId = '{customerId}'";
+                    $"WHERE UserId = '{userId}'";
 
                 MySqlCommand cmd = new MySqlCommand(sql, conn);
 
@@ -27,11 +27,13 @@ namespace OnlineRetailersStore.Data
                     {
                         orders.Add(new OrderHistory()
                         {
-                            CustomerId = reader["CustomerId"] as string,
-                            ProductId = reader["Product_Id"] as string,
+                            UserId = reader["UserId"] as string,
+                            ProductId = reader["ProductId"] as string,
                             Quantity = (int)(reader["Quantity"] as int?),
                             Price = (decimal)(reader["Price"] as decimal?),
                             Name = reader["Name"] as string,
+                            LineItemId = (int)(reader["LineItemId"] as int?),
+                            CreatedDate = (DateTime)(reader["CreatedDate"] as DateTime?),
                             OrderId = reader["OrderId"] as string
                         });
                     }

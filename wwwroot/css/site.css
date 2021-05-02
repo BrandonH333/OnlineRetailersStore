@@ -114,3 +114,29 @@ a, .btn-link {
         right: 0.75rem;
         top: 0.5rem;
     }
+
+#order-history-table td, #order-history-table th {
+    border: 1px solid black;
+    padding: 8px;
+}
+
+#order-history-table tr:hover {
+    background-color: #ddd;
+}
+
+#order-history-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+#order-history-table th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #669999;
+    text-align: center;
+    color: white;
+}
+
+#order-history-table th, #order-history-table tr, #order-history-table td {
+    text-align: center;
+}
