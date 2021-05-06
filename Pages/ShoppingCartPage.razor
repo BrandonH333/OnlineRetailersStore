@@ -12,6 +12,7 @@
     string account;
     string shoppingCart;
     string orderHistory;
+    string product;
     string manageProducts;
     decimal totalPrice = 0;
     private List<bool> readMoreList = new List<bool>();
@@ -28,6 +29,7 @@
             userInfo = UserService.GetUserInformationById(UserId);
             home = $"home/{UserId}";
             account = $"account/{UserId}";
+            product = $"products/{UserId}";
             shoppingCart = $"shopping-cart/{UserId}";
             orderHistory = $"order-history/{UserId}";
 
@@ -101,12 +103,12 @@
                     </SidebarLink>
                 </SidebarItem>
                 <SidebarItem>
-                    <SidebarLink Title="Product">
+                    <SidebarLink To=@product Title="Product">
                         <Icon Name="IconName.Gift" Margin="Margin.Is3.FromRight" />Products
                     </SidebarLink>
                 </SidebarItem>
                 <SidebarItem>
-                    <SidebarLink To=@shoppingCart Title="Shopping Cart">
+                    <SidebarLink Title="Shopping Cart">
                         <Icon Name="IconName.ShoppingCart" Margin="Margin.Is3.FromRight" />Shopping Cart
                     </SidebarLink>
                 </SidebarItem>
@@ -149,7 +151,8 @@ else
     var product = productList[size];
     bool inStock = productList[localSize].Inventory > 0;
     totalPrice += product.Price;
-    <Row Style="margin: 10px">
+<Card>
+    <Row Style="margin: 10px; padding-left: 25px">
         <Image Class="shopping-cart-image" src="@product.ImageSrc"></Image>
         <Column>
 
@@ -168,6 +171,7 @@ else
             </Row>
         </Column>
     </Row>
+</Card>
 }
 <div style="text-align: right;font-size: 20px">Subtotal (@productList.Count item): $@totalPrice</div>
-<Row style="float: right"><Button Color="Color.Primary" style=" width: 250px; height: 100px"> Buy now</Button></Row>
+<Row style="float: right"><Button Color="Color.Primary" style="width: 250px; height: 100px"> Buy now</Button></Row>
