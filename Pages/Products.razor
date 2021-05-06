@@ -86,12 +86,17 @@
     {
         int quantityIndex = productIndex;
         productList[productIndex].Inventory -= quantity;
+        if(quantityList[quantityIndex] >= productList[productIndex].Inventory)
+        {
+            quantityList[quantityIndex] = productList[productIndex].Inventory;
+        }
         if(productList[productIndex].Inventory == 0)
         {
             quantityList[quantityIndex] = 0;
         }
         ProductService.UpdateQuantityForProduct(productList[productIndex].Id, productList[productIndex].Inventory);
         ProductService.AddProductToShoppingCart(shoppingCartList, productList[productIndex].Id, productIndex, quantity, UserId);
+        shoppingCartList = ShoppingCartService.GetShoppingCartList(UserId);
         ShowModal();
     }
 
