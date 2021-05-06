@@ -25,6 +25,9 @@ a, .btn-link {
 .product-image{
     height: 300px;
 }
+.shopping-cart-image {
+    height: 150px;
+}
 
 .product-description{
     height: 170px;

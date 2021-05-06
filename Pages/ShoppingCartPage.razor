@@ -1,4 +1,4 @@
-﻿@page "/products/{UserId}"
+@page "/shopping-cart/{UserId}"
 @using OnlineRetailersStore.Data.Models
 @using OnlineRetailersStore.Data
 @inject NavigationManager nav
@@ -13,7 +13,9 @@
     string shoppingCart;
     string orderHistory;
     string manageProducts;
+    decimal totalPrice = 0;
     private List<bool> readMoreList = new List<bool>();
+    List<ShoppingCart> shoppingCartList = new List<ShoppingCart>();
     List<Product> productList = new List<Product>();
     List<int> quantityList = new List<int>();
 
@@ -29,11 +31,16 @@
             shoppingCart = $"shopping-cart/{UserId}";
             orderHistory = $"order-history/{UserId}";
 
-            productList = ProductService.GetProductList();
+            shoppingCartList = ShoppingCartService.GetShoppingCartList(UserId);
+            for (int i = 0; i < shoppingCartList.Count(); i++)
+            {
+                string productId = shoppingCartList[i].ProductId;
+                productList.Add(ProductService.GetProduct(productId));
+                quantityList.Add(shoppingCartList[i].Quantity);
+            }
             for (int i = 0; i < productList.Count(); i++)
             {
-                int quant = 0; //New quantity of 0
-                quantityList.Add(quant); //Populate quantityList  with 0s
+
                 readMoreList.Add(false);
             }
         }
@@ -123,7 +130,7 @@
 {
     <h2 class="center-header">
         <Alert Color="Color.Primary" Visible="true" Style="overflow-wrap">
-            Products
+            Shopping Cart
         </Alert>
     </h2>
 }
@@ -134,61 +141,33 @@ else
 
 
 
-<div class="product-wrap">
-    <Row>
 
-        @for (int size = 0; size < productList.Count(); size++)
-        {
-            var localSize = size;
-            bool inStock = productList[localSize].Inventory > 0;
-            <Column ColumnSize="ColumnSize.Is3">
-                <Card>
-                    <CardImage Source=@productList[localSize].ImageSrc Alt="Placeholder image" Class="product-image">
-                    </CardImage>
 
-                    <CardBody>
-                        <CardTitle Size="5" Weight="TextWeight.Bold">@productList[localSize].Name</CardTitle>
-                        <CardTitle Size="5" Weight="TextWeight.Bold">$@productList[localSize].Price</CardTitle>
-                        @if (productList[localSize].Inventory > 0)
-                        {
-                            <Row Gutter="(32, 16)">
-                                <Column ColumnSize="ColumnSize.Is5">
-                                    <CardText Style="color: green; font-size:14px"> In stock </CardText>
-                                </Column>
-                                <Column ColumnSize="ColumnSize.Is7">
-                                    <CardText Style="font-size:16px"> Quantity: @productList[localSize].Inventory</CardText>
+@for (int size = 0; size < productList.Count(); size++)
+{
+    var localSize = size;
+    var product = productList[size];
+    bool inStock = productList[localSize].Inventory > 0;
+    totalPrice += product.Price;
+    <Row Style="margin: 10px">
+        <Image Class="shopping-cart-image" src="@product.ImageSrc"></Image>
+        <Column>
 
-                                </Column>
-                            </Row>
-                        }
-                        @if (productList[localSize].Inventory <= 0)
-                        {
-                            <Column ColumnSize="ColumnSize.Is8">
-                                <CardText Style="color: red">Out of stock </CardText>
-                            </Column><Column ColumnSize="ColumnSize.Is4">
-                                <CardText> Quantity: @productList[localSize].Inventory</CardText>
-                            </Column>
-                        }
-                        @if (productList[localSize].Description.Length > 120 && !readMoreList[localSize])
-                        {
-                            @CutText(productList[localSize].Description, 120)
-                            <Button Clicked="() => SetReadMore(true, localSize)">...read more</Button>
-                        }
-                        @if (readMoreList[localSize])
-                        {
-                            @productList[localSize].Description
-                            <Button Clicked="() => SetReadMore(false, localSize)">...read less</Button>
-                        }
-                        <CardText></CardText>
-                            <Button Color="Color.Secondary" Clicked="() => AddQuantity(localSize)">+</Button>
-                            <text style="background-color:whitesmoke;display:inline-table">@quantityList[localSize]</text>
-                            <Button Color="Color.Secondary" Clicked="() => RemoveQuantity(localSize)">-</Button>
-                            <Button Color="Color.Primary" style="float: right" Disabled="!inStock">Buy</Button>
-                    </CardBody>
-                </Card>
-            </Column>
-        }
-
+            <Row Style="font-size: 20px; font-weight: bold">@product.Name</Row>
+            <Row>Price: @product.Price</Row>
+            <Row>Quantity: @quantityList[localSize]</Row>
+            <Row>
+                @if (product.Inventory > 0)
+                {
+                    <div style="color: green">In Stock</div>
+                }
+                @if (product.Inventory <= 0)
+                {
+                    <div style="color: red">Out of stock Stock</div>
+                }
+            </Row>
+        </Column>
     </Row>
-
-</div>
+}
+<div style="text-align: right;font-size: 20px">Subtotal (@productList.Count item): $@totalPrice</div>
+<Row style="float: right"><Button Color="Color.Primary" style=" width: 250px; height: 100px"> Buy now</Button></Row>

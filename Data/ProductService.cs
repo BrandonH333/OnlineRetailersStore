@@ -7,35 +7,41 @@ namespace OnlineRetailersStore.Data
 {
     public static class ProductService
     {
-        public static Product GetProductById(string productId)
+
+        public static Product GetProduct(string ProductId)
         {
-            Product product = null;
             using (var conn = new MySqlConnection(OnlineRetailersStoreContext.ConnectionString))
             {
                 conn.OpenAsync();
                 var sql = $"SELECT * " +
                     $"FROM online_retailers_store.product " +
-                    $"WHERE ProductId = '{productId}'";
+                    $"WHERE ProductId = '{ProductId}' ";
 
                 var cmd = new MySqlCommand(sql, conn);
 
-                using (var reader = cmd.ExecuteReader())
+                using (var data_reader = cmd.ExecuteReader())
                 {
-                    while (reader.Read())
+                    if (data_reader.HasRows)
                     {
-                        product = new Product()
+                        while (data_reader.Read())
                         {
-                            Id = reader["ProductId"] as string,
-                            Name = reader["Name"] as string,
-                            Description = reader["Description"] as string,
-                            Price = (int)reader["Price"],
-                            SupplierId = reader["SupplierId"] as string
-                        };
+                            Product product = new Product
+                            {
+                                Id = data_reader["ProductId"] as string,
+                                Name = data_reader["Name"] as string,
+                                Description = data_reader["Description"] as string,
+                                Price = (decimal)data_reader["Price"],
+                                ImageSrc = data_reader["ImageSrc"] as string,
+                                Inventory = (int)data_reader["Inventory"],
+                                SupplierId = data_reader["SupplierId"] as string,
+                            };
+                            return product;
+
+                        }
                     }
                 }
+                return null;
             }
-
-            return product;
         }
 
         public static List<Product> GetProductList()
