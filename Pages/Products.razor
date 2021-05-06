@@ -38,7 +38,7 @@
             shoppingCartList = ShoppingCartService.GetShoppingCartList(UserId);
             for (int i = 0; i < productList.Count(); i++)
             {
-                int quant = 0; //New quantity of 0
+                int quant = 1; //New quantity of 0
                 quantityList.Add(quant); //Populate quantityList  with 0s
                 readMoreList.Add(false);
             }
@@ -67,7 +67,7 @@
     }
     private void RemoveQuantity(int index)
     {
-        if (quantityList[index] == 0) return;
+        if (quantityList[index] == 1) return;
         quantityList[index]--;
     }
     protected string CutText(object text, int length)
@@ -222,10 +222,10 @@ else
 
 
 
-                        <Button Color="Color.Secondary" Clicked="() => AddQuantity(localSize)">+</Button>
+                        <Button Color="Color.Secondary" Style="font-size: 20px; font-weight: bolder" Clicked="() => AddQuantity(localSize)">+</Button>
                         <text style="background-color:whitesmoke;display:inline-table">@quantityList[localSize]</text>
-                        <Button Color="Color.Secondary" Clicked="() => RemoveQuantity(localSize)">-</Button>
-                        <Button Color="Color.Primary" style="float: right" Disabled="!inStock" Clicked="() => AddProductToShoppingCart(localSize, quantityList[localSize])">Buy</Button>
+                        <Button Color="Color.Secondary" Style="font-size: 20px; font-weight: bolder" Clicked="() => RemoveQuantity(localSize)">-</Button>
+                        <Button Color="Color.Primary" Style="float: right;font-size: 20px; width: 75px" Disabled="!inStock" Clicked="() => AddProductToShoppingCart(localSize, quantityList[localSize])">Buy</Button>
                     </CardBody>
                 </Card>
             </Column>

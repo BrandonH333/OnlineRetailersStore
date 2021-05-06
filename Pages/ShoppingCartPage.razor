@@ -48,6 +48,7 @@
 
                 readMoreList.Add(false);
             }
+            RecalculateTotalPrice();
         }
         else
         {
@@ -68,12 +69,23 @@
 
     private void AddQuantity(int index)
     {
+        if (productList[index].Inventory == 0) return; //do not let you add more to cart
         quantityList[index]++;
+        ShoppingCartService.UpdateQuantityForCart(productList[index].Id, quantityList[index], UserId);
+        ShoppingCartService.TakeAwayQuantityForProduct(productList[index].Inventory, productList[index].Id, quantityList[index], UserId);
+        productList[index].Inventory--;
+        //shoppingCartList = ShoppingCartService.GetShoppingCartList(UserId);
+        RecalculateTotalPrice();
     }
     private void RemoveQuantity(int index)
     {
-        if (quantityList[index] == 0) return;
+        if (quantityList[index] == 1) return;
         quantityList[index]--;
+        ShoppingCartService.UpdateQuantityForCart(productList[index].Id, quantityList[index], UserId);
+        ShoppingCartService.AddQuantityForProduct(productList[index].Inventory, productList[index].Id, quantityList[index], UserId);
+        productList[index].Inventory++;
+        //shoppingCartList = ShoppingCartService.GetShoppingCartList(UserId);
+        RecalculateTotalPrice();
     }
     protected string CutText(object text, int length)
     {
@@ -85,6 +97,16 @@
     private void SetReadMore(bool value, int index)
     {
         readMoreList[index] = value;
+    }
+
+    private void RecalculateTotalPrice()
+    {
+        totalPrice = 0;
+    @for (int size = 0; size < productList.Count(); size++)
+        {
+            var product = productList[size];
+            totalPrice += product.Price * quantityList[size];
+        }
     }
 }
 
@@ -153,21 +175,25 @@ else
     var localSize = size;
     var product = productList[size];
     bool inStock = productList[localSize].Inventory > 0;
-    totalPrice += product.Price*quantityList[size];
-<Card>
-    <Row Style="margin: 10px; padding-left: 25px">
-        <Image Class="shopping-cart-image" src="@product.ImageSrc"></Image>
-        <Column Style="margin-left: 10px">
+    
+    <Card>
+        <Row Style="margin: 10px; padding-left: 25px">
+            <Image Class="shopping-cart-image" src="@product.ImageSrc"></Image>
+            <Column Style="margin-left: 10px">
 
-            <Row Style="font-size: 20px; font-weight: bold">@product.Name</Row>
-            <Row>Price: @product.Price</Row>
-            <Row>Quantity: @quantityList[localSize]</Row>
-            <Row>
+                <Row Style="font-size: 20px; font-weight: bold">@product.Name</Row>
+                <Row>Price: $@product.Price</Row>
+                <Row Style="float: right">
+                    <Button Color="Color.Secondary" Style="margin-right: 10px;font-size: 20px; font-weight: bolder" Clicked="() => AddQuantity(localSize)">+</Button>
+                    <text style="background-color:whitesmoke;display:inline-table;margin-top: 9px">@quantityList[localSize]</text>
+                    <Button Color="Color.Secondary" Style="margin-left: 10px;font-size: 20px; font-weight: bolder" Clicked="() => RemoveQuantity(localSize)">-</Button>
+                </Row>
+                <Row Style="float: left">
                     <div style="color: green">In Stock</div>
-            </Row>
-        </Column>
-    </Row>
-</Card>
+                </Row>
+            </Column>
+        </Row>
+    </Card>
 }
 <div style="text-align: right;font-size: 20px">Subtotal (@productList.Count item): $@totalPrice</div>
 <Row style="float: right"><SidebarLink To="@checkout"><Button Color="Color.Primary" style="width: 250px; height: 100px"> Buy now</Button></SidebarLink></Row>

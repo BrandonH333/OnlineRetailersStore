@@ -46,6 +46,50 @@ namespace OnlineRetailersStore.Data
             return shoppingCartList;
         }
 
+        public static bool UpdateQuantityForCart(string productId, int quantity, string userId)
+        {
+            using (var conn = new MySqlConnection(OnlineRetailersStoreContext.ConnectionString))
+            {
+                conn.OpenAsync();
+                var cmd = conn.CreateCommand();
+                cmd.CommandText = $"UPDATE online_retailers_store.shopping_cart " +
+                            $"SET Quantity = '{quantity}' " +
+                            $"WHERE ProductId = '{productId}' and UserId = '{userId}' ";
+                cmd.ExecuteNonQuery();
+            }
+            return true;
+        }
+
+        public static bool TakeAwayQuantityForProduct(int currentInventory, string productId, int quantity, string userId)
+        {
+            using (var conn = new MySqlConnection(OnlineRetailersStoreContext.ConnectionString))
+            {
+                conn.OpenAsync();
+                var cmd = conn.CreateCommand();
+
+                cmd.CommandText = $"UPDATE online_retailers_store.product " +
+                            $"SET Inventory = '{currentInventory - 1}' " +
+                            $"WHERE ProductId = '{productId}' ";
+                cmd.ExecuteNonQuery();
+            }
+            return true;
+        }
+
+        public static bool AddQuantityForProduct(int currentInventory, string productId, int quantity, string userId)
+        {
+            using (var conn = new MySqlConnection(OnlineRetailersStoreContext.ConnectionString))
+            {
+                conn.OpenAsync();
+                var cmd = conn.CreateCommand();
+
+                cmd.CommandText = $"UPDATE online_retailers_store.product " +
+                            $"SET Inventory = '{currentInventory + 1}' " +
+                            $"WHERE ProductId = '{productId}' ";
+                cmd.ExecuteNonQuery();
+            }
+            return true;
+        }
+
 
     }
 }
