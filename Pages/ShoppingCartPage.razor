@@ -163,14 +163,7 @@ else
             <Row>Price: @product.Price</Row>
             <Row>Quantity: @quantityList[localSize]</Row>
             <Row>
-                @if (product.Inventory > 0)
-                {
                     <div style="color: green">In Stock</div>
-                }
-                @if (product.Inventory <= 0)
-                {
-                    <div style="color: red">Out of stock Stock</div>
-                }
             </Row>
         </Column>
     </Row>

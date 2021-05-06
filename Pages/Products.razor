@@ -14,8 +14,13 @@
     string orderHistory;
     string manageProducts;
     private List<bool> readMoreList = new List<bool>();
+    List<ShoppingCart> shoppingCartList = new List<ShoppingCart>();
     List<Product> productList = new List<Product>();
     List<int> quantityList = new List<int>();
+    // reference to the modal component
+    private Modal modalRef;
+
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -30,6 +35,7 @@
             orderHistory = $"order-history/{UserId}";
 
             productList = ProductService.GetProductList();
+            shoppingCartList = ShoppingCartService.GetShoppingCartList(UserId);
             for (int i = 0; i < productList.Count(); i++)
             {
                 int quant = 0; //New quantity of 0
@@ -56,6 +62,7 @@
 
     private void AddQuantity(int index)
     {
+        if (quantityList[index] == productList[index].Inventory) return;
         quantityList[index]++;
     }
     private void RemoveQuantity(int index)
@@ -73,6 +80,29 @@
     private void SetReadMore(bool value, int index)
     {
         readMoreList[index] = value;
+    }
+
+    private void AddProductToShoppingCart(int productIndex, int quantity)
+    {
+        int quantityIndex = productIndex;
+        productList[productIndex].Inventory -= quantity;
+        if(productList[productIndex].Inventory == 0)
+        {
+            quantityList[quantityIndex] = 0;
+        }
+        ProductService.UpdateQuantityForProduct(productList[productIndex].Id, productList[productIndex].Inventory);
+        ProductService.AddProductToShoppingCart(shoppingCartList, productList[productIndex].Id, productIndex, quantity, UserId);
+        ShowModal();
+    }
+
+    private void ShowModal()
+    {
+        modalRef.Show();
+    }
+
+    private void HideModal()
+    {
+        modalRef.Hide();
     }
 }
 
@@ -163,11 +193,15 @@ else
                         }
                         @if (productList[localSize].Inventory <= 0)
                         {
-                            <Column ColumnSize="ColumnSize.Is8">
-                                <CardText Style="color: red">Out of stock </CardText>
-                            </Column><Column ColumnSize="ColumnSize.Is4">
-                                <CardText> Quantity: @productList[localSize].Inventory</CardText>
-                            </Column>
+                    <Row Gutter="(32, 16)">
+                        <Column ColumnSize="ColumnSize.Is5">
+                            <CardText Style="color: red; font-size:14px"> Out of stock </CardText>
+                        </Column>
+                        <Column ColumnSize="ColumnSize.Is7">
+                            <CardText Style="font-size:16px"> Quantity: @productList[localSize].Inventory</CardText>
+
+                        </Column>
+                    </Row>
                         }
                         @if (productList[localSize].Description.Length > 120 && !readMoreList[localSize])
                         {
@@ -180,15 +214,31 @@ else
                             <Button Clicked="() => SetReadMore(false, localSize)">...read less</Button>
                         }
                         <CardText></CardText>
-                            <Button Color="Color.Secondary" Clicked="() => AddQuantity(localSize)">+</Button>
-                            <text style="background-color:whitesmoke;display:inline-table">@quantityList[localSize]</text>
-                            <Button Color="Color.Secondary" Clicked="() => RemoveQuantity(localSize)">-</Button>
-                            <Button Color="Color.Primary" style="float: right" Disabled="!inStock">Buy</Button>
+
+
+
+                        <Button Color="Color.Secondary" Clicked="() => AddQuantity(localSize)">+</Button>
+                        <text style="background-color:whitesmoke;display:inline-table">@quantityList[localSize]</text>
+                        <Button Color="Color.Secondary" Clicked="() => RemoveQuantity(localSize)">-</Button>
+                        <Button Color="Color.Primary" style="float: right" Disabled="!inStock" Clicked="() => AddProductToShoppingCart(localSize, quantityList[localSize])">Buy</Button>
                     </CardBody>
                 </Card>
             </Column>
         }
 
     </Row>
+
+    <Modal @ref="modalRef">
+        <ModalContent Centered="true">
+
+            <ModalBody Style="">
+                <Row>
+                    <Column ColumnSize="ColumnSize.Is11"><div style="color: lawngreen">Added to shopping cart succesfully</div></Column>
+                    <CloseButton Style="align-items: right"/>
+                </Row>
+            </ModalBody>
+
+        </ModalContent>
+    </Modal>
 
 </div>
