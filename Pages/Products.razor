@@ -90,12 +90,12 @@
                 </SidebarItem>
                 <SidebarItem>
                     <SidebarLink To=@account Title="Accounts">
-                        <Icon Name="IconName.Gift" Margin="Margin.Is3.FromRight" />Account
+                        <Icon Name="IconName.Fingerprint" Margin="Margin.Is3.FromRight" />Account
                     </SidebarLink>
                 </SidebarItem>
                 <SidebarItem>
                     <SidebarLink Title="Product">
-                        <Icon Name="IconName.Fingerprint" Margin="Margin.Is3.FromRight" />Product
+                        <Icon Name="IconName.Gift" Margin="Margin.Is3.FromRight" />Products
                     </SidebarLink>
                 </SidebarItem>
                 <SidebarItem>
@@ -172,14 +172,11 @@ else
                                 <CardText> Quantity: @productList[localSize].Inventory</CardText>
                             </Column>
                         }
-
                         @if (productList[localSize].Description.Length > 120 && !readMoreList[localSize])
                         {
                             @CutText(productList[localSize].Description, 120)
                             <Button Clicked="() => SetReadMore(true, localSize)">...read more</Button>
                         }
-
-
                         @if (readMoreList[localSize])
                         {
                             @productList[localSize].Description
