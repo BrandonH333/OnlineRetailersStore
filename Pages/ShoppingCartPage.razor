@@ -153,7 +153,7 @@ else
     var localSize = size;
     var product = productList[size];
     bool inStock = productList[localSize].Inventory > 0;
-    totalPrice += product.Price;
+    totalPrice += product.Price*quantityList[size];
 <Card>
     <Row Style="margin: 10px; padding-left: 25px">
         <Image Class="shopping-cart-image" src="@product.ImageSrc"></Image>
