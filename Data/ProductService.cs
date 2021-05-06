@@ -117,6 +117,62 @@ namespace OnlineRetailersStore.Data
             return productList;
         }
 
+        public static bool AddProductToShoppingCart(List<ShoppingCart> shoppingCartList, string productId, int productIndex, int quantity, string userId)
+        {
+            using (var conn = new MySqlConnection(OnlineRetailersStoreContext.ConnectionString))
+            {
+                bool foundSameItem = false;
+                conn.OpenAsync();
+                var cmd = conn.CreateCommand();
+                foreach (var shoppingCartItem in shoppingCartList)
+                {
+                    if (shoppingCartItem.ProductId == productId)
+                    {
+                        int totalQuantity = quantity + shoppingCartItem.Quantity;
+                        cmd.CommandText = $"UPDATE online_retailers_store.shopping_cart " +
+                            $"SET ShoppingCartId = '{shoppingCartItem.Id}', Quantity = '{totalQuantity}', ProductId = '{shoppingCartItem.ProductId}', UserId = '{shoppingCartItem.UserId}' " +
+                            $"WHERE UserId = '{userId}' and ProductId = '{productId}' ";
+                        foundSameItem = true;
+                    }
+
+
+                    
+                }
+                if (!foundSameItem)
+                {
+                    ShoppingCart shoppingCartItem = new ShoppingCart();
+                    shoppingCartItem.Id = Guid.NewGuid().ToString();
+                    shoppingCartItem.LineItemId = "1"; // ???
+                    shoppingCartItem.Quantity = quantity;
+                    shoppingCartItem.ProductId = productId;
+                    shoppingCartItem.UserId = userId;
+                    cmd.CommandText = "INSERT INTO online_retailers_store.shopping_cart " +
+                            $"VALUES ('{shoppingCartItem.Id}', '{shoppingCartItem.LineItemId}', '{shoppingCartItem.Quantity}', '{shoppingCartItem.ProductId}', '{shoppingCartItem.UserId}') ";
+
+
+                }
+
+                cmd.ExecuteNonQuery();
+            }
+
+            return true;
+        }
+
+        public static bool UpdateQuantityForProduct(string productId, int inventory)
+        {
+            using (var conn = new MySqlConnection(OnlineRetailersStoreContext.ConnectionString))
+            {
+                conn.OpenAsync();
+                var cmd = conn.CreateCommand();
+                cmd.CommandText = $"UPDATE online_retailers_store.product " +
+                            $"SET Inventory = '{inventory}' " +
+                            $"WHERE ProductId = '{productId}' ";
+                cmd.ExecuteNonQuery();
+            }
+                return true;
+        }
+
+
         public static bool SaveProducts(List<Product> products)
         {
             using (var conn = new MySqlConnection(OnlineRetailersStoreContext.ConnectionString))
