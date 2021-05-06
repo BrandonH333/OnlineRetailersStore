@@ -13,6 +13,7 @@
     string shoppingCart;
     string orderHistory;
     string product;
+    string checkout;
     string manageProducts;
     decimal totalPrice = 0;
     private List<bool> readMoreList = new List<bool>();
@@ -30,6 +31,7 @@
             home = $"home/{UserId}";
             account = $"account/{UserId}";
             product = $"products/{UserId}";
+            checkout = $"checkout/{UserId}";
             shoppingCart = $"shopping-cart/{UserId}";
             orderHistory = $"order-history/{UserId}";
 
@@ -175,4 +177,4 @@ else
 </Card>
 }
 <div style="text-align: right;font-size: 20px">Subtotal (@productList.Count item): $@totalPrice</div>
-<Row style="float: right"><Button Color="Color.Primary" style="width: 250px; height: 100px"> Buy now</Button></Row>
+<Row style="float: right"><SidebarLink To="@checkout"><Button Color="Color.Primary" style="width: 250px; height: 100px"> Buy now</Button></SidebarLink></Row>
