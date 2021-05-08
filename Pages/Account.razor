@@ -41,8 +41,13 @@
 
     private void Save()
     {
-        alertVisible = UserService.SaveUser(userInfo);
-        nav.NavigateTo("account/" + userInfo.User.Id);
+        var userId = UserService.SaveUser(userInfo);
+
+        if (!string.IsNullOrEmpty(userId))
+        {
+            alertVisible = true;
+            nav.NavigateTo("account/" + userId);
+        }
     }
 }
 
@@ -109,6 +114,12 @@
     {
         <h2 class="center-header">Create Account</h2>
     }
+    <Alert Color="Color.Success" @bind-Visible="@alertVisible">
+        <AlertDescription>
+            Your save was successful
+        </AlertDescription>
+        <CloseButton />
+    </Alert>
 
     <EditForm Model="@userInfo" OnValidSubmit="Save" Context="OrderService">
         <Field Horizontal="true">
@@ -205,11 +216,5 @@
         }
 
         <Button class="submit-button" Type="ButtonType.Submit" Color="Color.Dark">Save</Button>
-        <Alert Color="Color.Success" @bind-Visible="@alertVisible">
-            <AlertDescription>
-                Your save was successful
-            </AlertDescription>
-            <CloseButton />
-        </Alert>
     </EditForm>
 </div>
