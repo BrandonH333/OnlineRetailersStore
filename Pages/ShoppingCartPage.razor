@@ -61,12 +61,6 @@
         }
     }
 
-    private void Save()
-    {
-        alertVisible = UserService.SaveUser(userInfo);
-        nav.NavigateTo("account/" + userInfo.User.Id);
-    }
-
     private void AddQuantity(int index)
     {
         if (productList[index].Inventory == 0) return; //do not let you add more to cart

@@ -124,7 +124,7 @@ namespace OnlineRetailersStore.Data
             return user;
         }
 
-        public static bool SaveUser(UserInformation user)
+        public static string? SaveUser(UserInformation user)
         {
             using (var conn = new MySqlConnection(OnlineRetailersStoreContext.ConnectionString))
             {
@@ -145,7 +145,7 @@ namespace OnlineRetailersStore.Data
                         // If the reader can read this means the username provided is already taken
                         if (reader.Read())
                         {
-                            return false;
+                            return null;
                         }
                         else
                         {
@@ -155,13 +155,14 @@ namespace OnlineRetailersStore.Data
                             user.BankAccount.Id = Guid.NewGuid().ToString();
 
                             cmd = conn.CreateCommand();
-                            cmd.CommandText = "INSERT INTO online_retailers_store.user (UserId, Username, Password, FirstName, LastName) " +
-                                "VALUES(@UserId, @Username, @Password, @FirstName, @LastName)";
+                            cmd.CommandText = "INSERT INTO online_retailers_store.user (UserId, Username, Password, FirstName, LastName, Retailer) " +
+                                "VALUES(@UserId, @Username, @Password, @FirstName, @LastName, @Retailer)";
                             cmd.Parameters.AddWithValue("@UserId", user.User.Id);
                             cmd.Parameters.AddWithValue("@Username", user.User.Username);
                             cmd.Parameters.AddWithValue("@Password", user.User.Password);
                             cmd.Parameters.AddWithValue("@FirstName", user.User.FirstName);
                             cmd.Parameters.AddWithValue("@LastName", user.User.LastName);
+                            cmd.Parameters.AddWithValue("@Retailer", 0);
                             cmd.ExecuteNonQuery();
 
                             if(user.Address != null)
@@ -194,7 +195,7 @@ namespace OnlineRetailersStore.Data
                                 cmd.ExecuteNonQuery();
                             }
 
-                            return true;
+                            return user.User.Id;
                         }
                     }
                 }
@@ -241,7 +242,7 @@ namespace OnlineRetailersStore.Data
                     
                 }
             }
-            return true;
+            return user.User.Id;
         }
     }
 }

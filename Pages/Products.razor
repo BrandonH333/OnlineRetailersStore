@@ -54,12 +54,6 @@
         }
     }
 
-    private void Save()
-    {
-        alertVisible = UserService.SaveUser(userInfo);
-        nav.NavigateTo("account/" + userInfo.User.Id);
-    }
-
     private void AddQuantity(int index)
     {
         if (quantityList[index] == productList[index].Inventory) return;
