@@ -75,6 +75,37 @@ namespace OnlineRetailersStore.Data
             return true;
         }
 
+        public static bool DeleteShoppingCartItem(string shoppingCartId)
+        {
+            using (var conn = new MySqlConnection(OnlineRetailersStoreContext.ConnectionString))
+            {
+                conn.OpenAsync();
+                var cmd = conn.CreateCommand();
+
+                cmd.CommandText = $"DELETE from online_retailers_store.shopping_cart " +
+                            $"WHERE ShoppingCartId = '{shoppingCartId}' ";
+                cmd.ExecuteNonQuery();
+            }
+            return true;
+        }
+
+        public static bool UpdateProductQuantityAfterRemoval(string productId, int currentQuantity, int quantity)
+        {
+            using (var conn = new MySqlConnection(OnlineRetailersStoreContext.ConnectionString))
+            {
+                conn.OpenAsync();
+                var cmd = conn.CreateCommand();
+
+                cmd.CommandText = $"UPDATE online_retailers_store.product " +
+                            $"SET Inventory = '{currentQuantity + quantity}' " +
+                            $"WHERE ProductId = '{productId}' ";
+
+                cmd.ExecuteNonQuery();
+            }
+            return true;
+        }
+
+
         public static bool AddQuantityForProduct(int currentInventory, string productId, int quantity, string userId)
         {
             using (var conn = new MySqlConnection(OnlineRetailersStoreContext.ConnectionString))
