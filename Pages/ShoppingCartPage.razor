@@ -14,7 +14,6 @@
     string orderHistory;
     string product;
     string checkout;
-    string manageProducts;
     decimal totalPrice = 0;
     private List<bool> readMoreList = new List<bool>();
     List<ShoppingCart> shoppingCartList = new List<ShoppingCart>();
@@ -35,8 +34,6 @@
 
         if (!string.IsNullOrEmpty(UserId))
         {
-            // Query for customer info so we can set the object and pass into data bindings into the blazorise front end component library below
-            userInfo = UserService.GetUserInformationById(UserId);
             home = $"home/{UserId}";
             account = $"account/{UserId}";
             product = $"products/{UserId}";
@@ -60,9 +57,7 @@
             RecalculateTotalPrice();
         }
         else
-        {
-            userInfo = new UserInformation();
-            userInfo.BankAccount.ExpirationDate = DateTime.Now;
+        {            
             home = "/";
             account = "/";
             shoppingCart = "/";
@@ -143,7 +138,7 @@
     <Sidebar @ref="sidebar">
         <SidebarContent>
             <SidebarBrand>
-                <a href="/products">Online Retailers Store</a>
+                <a href="@home">Online Retailers Store</a>
             </SidebarBrand>
             <SidebarNavigation>
                 <SidebarItem>

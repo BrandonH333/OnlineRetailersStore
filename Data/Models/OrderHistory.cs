@@ -7,15 +7,13 @@ namespace OnlineRetailersStore.Data.Models
 {
     public class OrderHistory
     {
-        public String UserId { get; set; }
-        public String ProductId { get; set; }
+        public string UserId { get; set; }
+        public string ProductId { get; set; }
         public int Quantity { get; set; }
         public decimal Price { get; set; }
-        public String Name { get; set; }
-        public String OrderId { get; set; }
+        public string Name { get; set; }
+        public string OrderNumber { get; set; }
         public int LineItemId { get; set; }
         public DateTime CreatedDate { get; set; }
-
-        ICollection<Orders> Orders { get; set; }
     }
 }

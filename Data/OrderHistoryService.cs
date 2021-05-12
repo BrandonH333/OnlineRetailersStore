@@ -16,10 +16,12 @@ namespace OnlineRetailersStore.Data
             {
                 conn.OpenAsync();
                 var sql = $"SELECT * " +
-                    $"FROM online_retailers_store.order_history " +
-                    $"WHERE UserId = '{userId}'";
+                    $"FROM online_retailers_store.order " +
+                    $"JOIN online_retailers_store.product ON product.ProductId = order.ProductId " +
+                    $"WHERE UserId = '{userId}' " +
+                    $"ORDER BY CreatedDate DESC, LineItemId";
 
-                MySqlCommand cmd = new MySqlCommand(sql, conn);
+                var cmd = new MySqlCommand(sql, conn);
 
                 using (var reader = cmd.ExecuteReader())
                 {
@@ -34,7 +36,7 @@ namespace OnlineRetailersStore.Data
                             Name = reader["Name"] as string,
                             LineItemId = (int)(reader["LineItemId"] as int?),
                             CreatedDate = (DateTime)(reader["CreatedDate"] as DateTime?),
-                            OrderId = reader["OrderId"] as string
+                            OrderNumber = reader["OrderNumber"] as string
                         });
                     }
                 }

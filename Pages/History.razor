@@ -50,7 +50,7 @@
     <Sidebar @ref="sidebar">
         <SidebarContent>
             <SidebarBrand>
-                <a href="/products">Online Retailers Store</a>
+                <a href="@home">Online Retailers Store</a>
             </SidebarBrand>
             <SidebarNavigation>
                 <SidebarItem>
@@ -119,7 +119,7 @@ else
         @foreach (var order in userOrders)
         {
             <tr>
-                <td>@order.OrderId</td>
+                <td>@order.OrderNumber</td>
                 <td>@order.ProductId</td>
                 <td>@order.Name</td>
                 <td>@order.CreatedDate</td>
