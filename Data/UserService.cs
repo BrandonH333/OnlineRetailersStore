@@ -239,7 +239,6 @@ namespace OnlineRetailersStore.Data
                         comm.Parameters.AddWithValue("@Cvc", user.BankAccount.Cvc);
                         comm.ExecuteNonQuery();
                     }
-                    
                 }
             }
             return user.User.Id;

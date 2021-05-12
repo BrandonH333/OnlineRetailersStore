@@ -1,0 +1,201 @@
+﻿@page "/checkout/{UserId}"
+@using OnlineRetailersStore.Data.Models
+@using OnlineRetailersStore.Data
+@inject NavigationManager nav
+
+@code {
+    [Parameter] public string UserId { get; set; }
+    Sidebar sidebar;
+    UserInformation userInfo;
+    string home;
+    string account;
+    string product;
+    string shoppingCart;
+    string orderHistory;
+    bool alertVisible = false;
+    decimal totalPrice;
+    List<ShoppingCart> shoppingCartList = new List<ShoppingCart>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!string.IsNullOrEmpty(UserId))
+        {
+            userInfo = UserService.GetUserInformationById(UserId);
+            shoppingCartList = ShoppingCartService.GetShoppingCartList(UserId);
+            home = $"home/{UserId}";
+            account = $"account/{UserId}";
+            product = $"products/{UserId}";
+            shoppingCart = $"shopping-cart/{UserId}";
+            orderHistory = $"order-history/{UserId}";
+        }
+        else
+        {
+            nav.NavigateTo("/");
+        }
+
+        SetTotalPrice();
+    }
+
+    private void SetTotalPrice()
+    {
+        foreach(var product in shoppingCartList)
+        {
+            totalPrice += product.ProductPrice;
+        }
+    }
+
+    private void ConfirmPurchase()
+    {
+        var saved = CheckoutService.PlaceOrder(shoppingCartList);
+
+        if (saved)
+        {
+            nav.NavigateTo($"/order-history/{UserId}");
+        }
+        else
+        {
+            alertVisible = true;
+        }
+    }
+}
+
+<div class="sidebar-nav">
+    <Sidebar @ref="sidebar">
+        <SidebarContent>
+            <SidebarBrand>
+                <a href="@home">Online Retailers Store</a>
+            </SidebarBrand>
+            <SidebarNavigation>
+                <SidebarItem>
+                    <SidebarLink To=@home Title="Home">
+                        <Icon Name="IconName.Home" Margin="Margin.Is3.FromRight" />Home
+                    </SidebarLink>
+                </SidebarItem>
+                <SidebarItem>
+                    <SidebarLink To=@account Title="Accounts">
+                        <Icon Name="IconName.Fingerprint" Margin="Margin.Is3.FromRight" />Account
+                    </SidebarLink>
+                </SidebarItem>
+                <SidebarItem>
+                    <SidebarLink To=@product Title="Product">
+                        <Icon Name="IconName.Gift" Margin="Margin.Is3.FromRight" />Products
+                    </SidebarLink>
+                </SidebarItem>
+                <SidebarItem>
+                    <SidebarLink To=@shoppingCart Title="Shopping Cart">
+                        <Icon Name="IconName.ShoppingCart" Margin="Margin.Is3.FromRight" />Shopping Cart
+                    </SidebarLink>
+                </SidebarItem>
+                <SidebarItem>
+                    <SidebarLink To=@orderHistory Title="Order History">
+                        <Icon Name="IconName.History" Margin="Margin.Is3.FromRight" />Order History
+                    </SidebarLink>
+                </SidebarItem>
+                <SidebarItem>
+                    <SidebarLink To="/" Title="Sign out">
+                        <Icon Name="IconName.User" Margin="Margin.Is3.FromRight" />Sign out
+                    </SidebarLink>
+                </SidebarItem>
+            </SidebarNavigation>
+        </SidebarContent>
+    </Sidebar>
+</div>
+<div class="content-wrap">
+    <h2 class="center-header">Checkout</h2>
+    <Alert Color="Color.Success" @bind-Visible="@alertVisible">
+        <AlertDescription>
+            Your save was successful
+        </AlertDescription>
+        <CloseButton />
+    </Alert>
+
+    <h4 class="sub-header">Review Order Details</h4>
+    <Card>
+        <CardBody>
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHeaderCell>Product Name</TableHeaderCell>
+                        <TableHeaderCell>Quantity</TableHeaderCell>
+                        <TableHeaderCell>Price</TableHeaderCell>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    @foreach (var product in shoppingCartList)
+                    {
+                        <TableRow>
+                            <TableRowHeader>@product.ProductName</TableRowHeader>
+                            <TableRowCell>@product.Quantity</TableRowCell>
+                            <TableRowCell>@product.ProductPrice</TableRowCell>
+                        </TableRow>
+                    }
+                </TableBody>
+            </Table>
+            <div id="total-price-checkout">
+                Total: &ensp; $@totalPrice
+            </div>
+        </CardBody>
+    </Card>
+
+    <h4 class="sub-header">Confirm Address</h4>
+    <Field Horizontal="true">
+        <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">Address1</FieldLabel>
+        <FieldBody ColumnSize="ColumnSize.Is5">
+            <TextEdit Disabled="true" @bind-Text="@userInfo.Address.Address1" Required></TextEdit>
+        </FieldBody>
+    </Field>
+    <Field Horizontal="true">
+        <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">Address2</FieldLabel>
+        <FieldBody ColumnSize="ColumnSize.Is5">
+            <TextEdit Disabled="true" @bind-Text="@userInfo.Address.Address2"></TextEdit>
+        </FieldBody>
+    </Field>
+    <Field Horizontal="true">
+        <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">City</FieldLabel>
+        <FieldBody ColumnSize="ColumnSize.Is5">
+            <TextEdit Disabled="true" @bind-Text="@userInfo.Address.City" Required></TextEdit>
+        </FieldBody>
+    </Field>
+    <Field Horizontal="true">
+        <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">State</FieldLabel>
+        <FieldBody ColumnSize="ColumnSize.Is5">
+            <TextEdit Disabled="true" @bind-Text="@userInfo.Address.State" Required></TextEdit>
+        </FieldBody>
+    </Field>
+    <Field Horizontal="true">
+        <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">Zip Code</FieldLabel>
+        <FieldBody ColumnSize="ColumnSize.Is5">
+            <NumericEdit Disabled="true" @bind-Value="@userInfo.Address.ZipCode" Required></NumericEdit>
+        </FieldBody>
+    </Field>
+    <Field Horizontal="true">
+        <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">Country</FieldLabel>
+        <FieldBody ColumnSize="ColumnSize.Is5">
+            <TextEdit Disabled="true" @bind-Text="@userInfo.Address.Country" Required></TextEdit>
+        </FieldBody>
+    </Field>
+
+    <h4 class="sub-header">Confirm Payment</h4>
+    <Field Horizontal="true">
+        <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">Card Number</FieldLabel>
+        <FieldBody ColumnSize="ColumnSize.Is5">
+            <TextEdit Disabled="true" @bind-Text="@userInfo.BankAccount.CardNumber" Required></TextEdit>
+        </FieldBody>
+    </Field>
+    <Field Horizontal="true">
+        <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">Expiration</FieldLabel>
+        <FieldBody ColumnSize="ColumnSize.Is5">
+            <DateEdit Disabled="true" @bind-Date="@userInfo.BankAccount.ExpirationDate" Required></DateEdit>
+        </FieldBody>
+    </Field>
+    <Field Horizontal="true">
+        <FieldLabel ColumnSize="ColumnSize.Is2.Is2.WithOffset">CVC</FieldLabel>
+        <FieldBody ColumnSize="ColumnSize.Is5">
+            <NumericEdit Disabled="true" @bind-Value="@userInfo.BankAccount.Cvc" Required></NumericEdit>
+        </FieldBody>
+    </Field>
+    <div id="account-link-checkout">
+        <p>Edit account information <a href=@account>here</a></p>
+    </div>
+    <Button class="submit-button" Clicked="@ConfirmPurchase" Color="Color.Dark">Confirm Purchase</Button>
+</div>

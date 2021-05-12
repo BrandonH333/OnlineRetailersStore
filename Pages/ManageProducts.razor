@@ -51,7 +51,7 @@
     <Sidebar @ref="sidebar">
         <SidebarContent>
             <SidebarBrand>
-                <a href="/products">Online Retailers Store</a>
+                <a href="@home">Online Retailers Store</a>
             </SidebarBrand>
             <SidebarNavigation>
                 <SidebarItem>
@@ -103,14 +103,14 @@
                             <TextEdit @bind-Text=@product.Name Required/>
                         </Field>
                         <Field Horizontal="true">
-                            <FieldLabel ColumnSize="ColumnSize.Is3">Price</FieldLabel>
-                            <FieldBody ColumnSize="ColumnSize.Is4">
+                            <FieldLabel ColumnSize="ColumnSize.Is4">Price</FieldLabel>
+                            <FieldBody ColumnSize="ColumnSize.Is5">
                                 <NumericEdit @bind-Value=@product.Price Required/>
                             </FieldBody>
                         </Field>
                         <Field Horizontal="true">
-                            <FieldLabel ColumnSize="ColumnSize.Is3">Inventory</FieldLabel>
-                            <FieldBody ColumnSize="ColumnSize.Is4">
+                            <FieldLabel ColumnSize="ColumnSize.Is4">Inventory</FieldLabel>
+                            <FieldBody ColumnSize="ColumnSize.Is5">
                                 <NumericEdit @bind-Value=@product.Inventory Required/>
                             </FieldBody>
                         </Field>

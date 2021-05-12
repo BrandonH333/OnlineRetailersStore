@@ -14,8 +14,20 @@ a, .btn-link {
     border-color: #1861ac;
 }
 
+#total-price-checkout{
+    text-align: right;
+    padding-right: 60px;
+    font: 35px;
+    font-weight:800;
+}
 
-.card-text{
+#account-link-checkout {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 18px;
+}
+
+.card-text {
     font: 16px;
 }
 .content {

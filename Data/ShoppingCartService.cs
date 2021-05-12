@@ -7,8 +7,6 @@ namespace OnlineRetailersStore.Data
 {
     public static class ShoppingCartService
     {
-        
-
         public static List<ShoppingCart> GetShoppingCartList(string UserId)
         {
             var shoppingCartList = new List<ShoppingCart>();
@@ -18,6 +16,7 @@ namespace OnlineRetailersStore.Data
                 conn.OpenAsync();
                 var sql = $"SELECT * " +
                     $"FROM online_retailers_store.shopping_cart " +
+                    $"JOIN online_retailers_store.product ON product.ProductId = shopping_cart.ProductId " +
                     $"WHERE UserId = '{UserId}' ";
 
                 var cmd = new MySqlCommand(sql, conn);
@@ -35,9 +34,12 @@ namespace OnlineRetailersStore.Data
                                 Quantity = (int)data_reader["Quantity"],
                                 ProductId = data_reader["ProductId"] as string,
                                 UserId = data_reader["UserId"] as string,
-
+                                ProductName = data_reader["Name"] as string,
+                                ProductPrice = (decimal)data_reader["Price"]
                             };
 
+                            product.ProductPrice = product.ProductPrice * product.Quantity;
+                            
                             shoppingCartList.Add(product);
                         }
                     }
